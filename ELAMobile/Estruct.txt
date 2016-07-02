@@ -1,0 +1,18 @@
+﻿En los controladores tenemos el application_controller que viene siendo nuestro controlador principal y de donde heredarán todos los demás
+ controladores de la aplicación. El users_controller que contiene las rutas de la aplicación relacionadas con los usuarios.
+
+Los helpers vienen siendo clases que contienen fragmentos de código reusables y asisten en funcionalidad a los controladores y vistas.
+
+Las vistas son los archivos referentes a las distintas pantallas de presentación que ve el usuario y que pueda tener nuestra aplicación.
+
+├── app
+│   ├── controllers
+│   │   ├── application_controller.rb
+│   │   └── users_controller.rb
+│   ├── helpers
+│   │   └── application_helper.rb
+│   └── views
+│       ├── users.erb
+│       ├── layout.erb
+│       └── not_found.erb
+└── config.ru
