@@ -1,5 +1,5 @@
 
-function SelGroup() {
+function SelGroup(lv_boton) {
     $.ajax ({
       type: 'GET',
       url: 'http://localhost:4567/index',
