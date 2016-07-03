@@ -2,7 +2,7 @@
 function SelGroup() {
     $.ajax ({
       type: 'GET',
-      url: 'http://localhost:4567/index',
+      url: 'http://localhost:4567/index.html',
       data: $(this).serialize(),
       //Enviamos para mostrar un mensaje al precionar el botón
       success: function (data) {
