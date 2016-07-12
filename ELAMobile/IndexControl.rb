@@ -14,6 +14,10 @@ end
 
 post '/index' do
 
+  @result = params['mensaje']
+
+  post @result;
+
 @id='Le paso el valorr!!'
 erb :index
 end
