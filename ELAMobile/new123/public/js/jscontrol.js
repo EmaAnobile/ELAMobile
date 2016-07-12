@@ -14,8 +14,8 @@ function SelGroup(lv_boton) {
 // })
 //    }); { botton: "1" }
 //$.get ("/howmany", {botton: "1"}, function(result) {$("#mensaje").html(result);})
-
-$.post ("/howmany", {botton: lv_boton},
+var prueba = $("#mensaje").val()
+$.post ("/howmany", {botton: lv_boton, mensaje: prueba},
  function(result) { $("#mensaje").html(result);
 })
  };
