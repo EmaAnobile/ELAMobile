@@ -2,31 +2,34 @@ require 'rubygems'
 require 'sinatra'
 
 get '/' do
+
   erb :index
 end
 
 get '/howmany' do
 
 @valor = params[:botton]
+	valor1 = [params[:mensaje]]
 end
 
 post '/howmany' do
 
 @valor = params[:botton]
 
-@elems=[@valor_primero,@valor]
+valor1 = [params[:mensaje]]
 
+	valor1 << @valor
 
-@elems[@num_elem].size
-
+ 
 if @valor == "boton_rosa"
 
-return   @valor
+return   valor1
 
 else
   if @valor == "boton_rojo"
 
-  return @elems
+  return valor1
+	  
 end
 end
 end
