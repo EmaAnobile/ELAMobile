@@ -1,20 +1,19 @@
+require 'rubygems'
 require 'sinatra'
+#require 'data_mapper'
 
 get '/layout' do
   'Hola Mundo estas en index'
 end
 
-get '/index.html' do
+get '/index' do
+  'hola'
+ erb :index
 
-vBotton = ''
-
-# Asignamos el grupo correcto
-if vBotton_Group == ""
-vBotton =  "Rosa"
-else
-vBotton = "NoFunco"
 end
 
-puts vBotton
+post '/index' do
 
+@id='Le paso el valorr!!'
+erb :index
 end
