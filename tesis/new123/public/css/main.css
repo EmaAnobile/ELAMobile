@@ -1,0 +1,123 @@
+@html,body {
+    height:100%;
+}
+
+* {
+    margin: 0;
+}
+
+P {
+    color: black;
+}
+
+div.Boton_select {
+    border-radius: 90px;
+    width: 100px;
+    height: 50px;
+}
+
+td {
+    padding: 20px;
+}
+
+#mensaje {
+    position: absolute;
+    height: 9%;
+    width: 80%;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: -webkit-xxx-large;
+    font-weight: 600;
+    letter-spacing: 5px;
+}
+
+#tableELA {
+    position: absolute;
+    margin-left: 30%;
+}
+
+div#boton_rosa, div#boton_rojo, div#boton_celeste, div#boton_verde, div#boton_naranja, div#boton_amarillo {
+    width: 120px;
+    height: 120px;
+}
+
+div#boton_rosa {
+    color: pink;
+    background-color: hotpink;
+}
+
+div#boton_rojo {
+    color: red;
+    background-color: red;
+    width: 120px;
+    height: 120px;
+}
+
+div#boton_amarillo {
+    color: yellow;
+    background-color: yellow;
+}
+
+div#boton_celeste {
+    color: lightblue;
+    background-color: lightblue;
+}
+
+div#boton_verde {
+    color: green;
+    background-color: green
+}
+
+div#boton_naranja {
+    color: orange;
+    background-color: orange;
+}
+        /* Div que engloba el contenido de la página menos el footer */
+#BodyContein {
+                height:90%;
+}
+
+h1, header {
+    display:block;
+    padding:10px 0px;
+}
+
+h1 {
+    text-align: center;
+}
+
+textarea {
+    border-radius : 25px;
+    border: 5px solid;
+    border-color: cadetblue;
+    margin-left: 10%;
+    margin-right: auto;
+}
+
+section {
+    overflow: auto;
+    /* Definimos el padding inferior:
+    50px del pie de pagina mas 10px de separacion */
+    padding-bottom: 60px;
+    /* Definimos un padding superior */
+    padding-top:60px;
+}
+
+footer {
+    position: relative;
+    /* Altura total del footer en px con valor negativo */
+    margin-top: -50px;
+    /* Altura del footer en px. Se han restado los 5px del margen
+   superior mas los 5px del margen inferior */
+    height: 40px;
+    padding:5px 0px;
+    clear: both;
+    background: #286af0;
+    text-align: center;
+    color: #fff;
+}
+
+.define {
+    width:100px;
+    margin: 0,5%;
+}
