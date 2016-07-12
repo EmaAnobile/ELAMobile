@@ -16,3 +16,25 @@ Las vistas son los archivos referentes a las distintas pantallas de presentació
 │       ├── layout.erb
 │       └── not_found.erb
 └── config.ru
+
+
+
+$(document).ready(function() {
+function SelGroup(lv_boton) {
+    $.ajax ({
+      type: 'POST',
+      url: 'http://localhost:4567/index',
+      data: $(this).serialize(),
+      //Enviamos para mostrar un mensaje al precionar el botón
+      success: function (data) {
+//      alert (@id)
+//      }
+$.get('/index', function(data){
+   $('#mensaje').html(data)
+})
+}
+    })
+
+}
+});
+
