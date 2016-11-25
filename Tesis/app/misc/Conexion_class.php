@@ -1,7 +1,7 @@
 <?php
 	class Conexion {
 
-		private $dbTarget = "prueba_bd";
+		private $dbTarget = "elamobile_bd"; //"prueba_bd";
 		private $host 	  = "localhost";
 		private $usuario  = "root";
 		private $password = "";

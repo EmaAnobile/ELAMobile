@@ -19,7 +19,13 @@ if (!$con->conectar()) {
  
  }
 
- $query = "SELECT * FROM abecedario WHERE id_grupo =".$_POST['idboton'];
+ //$query = "SELECT * FROM abecedario WHERE id_grupo =".$_POST['idboton'];
+
+   $query =  "SELECT DISTINCT sg.id_subgrupo, sg.id_letra, sg.letra FROM subgrupo AS sg INNER JOIN grupo AS g 
+              ON ( sg.id_subgrupo = g.id_subgrupo ) INNER JOIN tablero as t ON t.id_grupo = g.id_grupo  
+              WHERE t.id_tablero =".$_POST['idtablero']." AND sg.id_subgrupo=".$_POST['idboton'];
+
+
 
  $letras = array();
 

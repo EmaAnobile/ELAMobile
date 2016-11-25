@@ -1,7 +1,8 @@
 //DECLARACIÓN DE VARIABLES GLOBALES
   var gv_boton = null; 
   var gv_letra = null;
-
+  var gv_user  = null;
+  var gv_pass  = null;
 
 //Documento Jquery que se ejecuta cuando
 //toda la página este cargada en el cliente
@@ -72,13 +73,37 @@ $(document).ready(function(data){
 
     });
 
-// Si persionamos el botón borrar
+// Si persionamos el botón Cancelar
    $("#cancelar").click(function(){
 
        gv_boton = null;
 
        inicializar_botones(); 
 
+   });
+
+
+// Si persionamos el botón Cancelar Login
+ $("#aceptar_login").click(function(){
+
+      //alert("LLegaaasteee!!");
+       
+//       gv_pass =  $(objeto).attr("ema");
+      //Obtenemos Usuario.
+        gv_user =  $('#user').val();
+        gv_pass =  $('#pass').val();
+
+      var vPass = document.getElementById("pass");
+      //Validar Usuario y Contraseña
+        validar_usuario(gv_user,gv_pass);
+
+});
+
+
+// Si persionamos el botón Cancelar Login
+   $("#cancelar_login").click(function(){
+
+       alert("CAaacaa cancelada neneee");
    });
 
 
@@ -105,11 +130,12 @@ function procesar_letra(objeto){
     $('#borrar_todo').hide();
     $('#cancelar').show();
             
-    gv_boton =  $(objeto).attr("nro");
+    gv_boton   = $(objeto).attr("nro");
+    gv_tablero = $(objeto).attr("nro_t"); 
 
 // Dibuja las letras del grupo seleccionado
 // en cada uno de los circulos.
-    distribuir_botones(gv_boton);
+    distribuir_botones(gv_tablero,gv_boton);
 
 // Cancelar
     cancelar_proceso(gv_boton);    
@@ -191,7 +217,8 @@ $('.Boton_select').each(function(key, values){
             url: 'misc/inc_bck_botones.php',
             type: 'POST',
             async: false,
-            data: { idboton  : $(values).attr('nro')
+            data: {  idtablero : $(values).attr('nro_t'),
+                     idboton   : $(values).attr('nro')
             },
             success: function(data) {
 
@@ -243,13 +270,14 @@ $('.Boton_select').each(function(key, values){
 
 //Función para distribuir las letras 
 //del grupo en cada uno de los circulos
-function distribuir_botones(gv_boton){
+function distribuir_botones(gv_tablero,gv_boton){
 
     $.ajax({
             url: 'misc/inc_bck_botones.php',
             type: 'POST',
             async: false,
-            data: { idboton  : gv_boton
+            data: { idtablero : gv_tablero,
+                    idboton   : gv_boton,
             },
 
             success: function(data) {
@@ -284,3 +312,46 @@ function distribuir_botones(gv_boton){
     });
 
 }
+
+//Función Validar Usuario y Contraseña.
+function validar_usuario(gv_user,gv_pass){
+ 
+
+//alert("LLegaaasteee!!"); 
+//location.href = "admin.html";   
+
+  gv_user = "'"+gv_user+"'";
+  gv_pass = "'"+gv_pass+"'";
+  
+  $.ajax({
+            url: 'misc/inc_bck_usuarios.php',
+            type: 'POST',
+            async: false,
+            data: { iduser : gv_user,
+                    idpass : gv_pass,
+            },
+
+            success: function(data) {
+
+// Manejo de Errores.
+                if (data.resultado == "OK") {
+                   
+
+                   location.href = "admin.html";  
+
+                } else
+                {
+
+                     alert(data.msg); 
+                }
+
+            },
+            error:function(){
+
+                alert("Error al intentar obtener datos");
+            },
+
+            dataType: 'json'
+    });
+
+};

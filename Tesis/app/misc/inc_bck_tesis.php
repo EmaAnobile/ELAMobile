@@ -19,7 +19,9 @@ if (!$con->conectar()) {
  
  }
 
-$query = "SELECT * FROM abecedario WHERE id_grupo =".$_POST['idboton']." AND id_letra=".$_POST['idletra'];
+//$query = "SELECT * FROM abecedario WHERE id_grupo =".$_POST['idboton']." AND id_letra=".$_POST['idletra'];
+
+  $query = "SELECT * FROM SUBGRUPO WHERE id_subgrupo =".$_POST['idboton']." AND id_letra=".$_POST['idletra'];
 
 //Si realizo la consulta.
 if($res = $con->query($query) ){
