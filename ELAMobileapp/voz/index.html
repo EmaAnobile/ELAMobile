@@ -1,0 +1,10 @@
+<!--EJEMPLO-->
+
+<script type="text/javascript" src="mespeak.js"></script>
+<script type="text/javascript">
+	meSpeak.loadConfig("mespeak_config.json");
+    meSpeak.loadVoice("voices/es-la.json");
+
+    meSpeak.speak("holaaaa!");
+</script>
+<input id="s" /><a href="javascript:meSpeak.speak(document.getElementById('s').value);">Hablar</a>

@@ -1,0 +1,188 @@
+<!-- index.html  -->
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+ <script type="text/javascript" src="js/jquery.js"></script>
+ <script type="text/javascript" src="js/tesis.js"></script>
+ <script type="text/javascript" src="voz/mespeak.js"></script>
+ <script type="text/javascript">
+    meSpeak.loadConfig("voz/mespeak_config.json");
+    meSpeak.loadVoice ("voz/voices/es-la.json");
+</script>
+
+<title>ELAMobile - Home</title>
+
+</head>
+    <body>
+<!--
+        <nav class="navbar navbar-inverse always-open">
+             <div class="navbar-header">
+        
+                <a class="navbar-brand" href="#">ELAMobile</a>
+                
+                <button type="button" class="navbar-toggle" 
+                    data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+
+                </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            
+        </nav>
+-->
+
+<nav role="navigation" class="navbar navbar-default">
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">ELAMobile</a>
+        </div>
+ 
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Inicio</a></li>
+                <li><a href="login.html">Configuración</a></li>
+            </ul>
+        </div>
+</nav>
+
+        <div id=BodyContein  class="container">
+            
+              <h4>Ingrese mensaje:</h4>
+                <header>
+                    <div class="row">
+                     
+                      <div class="col-xs-12 col-md-12">
+
+                        <textarea id="mensaje" readonly> </textarea>                          
+                        
+                      </div>
+                    <div class="row">
+                         
+                         <div class="col-md-11"> 
+                         </div>
+
+                          <div class="col-md-1">
+                            <img id="voz" src="img/icon-par.jpg" aria-label="Escuchar" data-tooltip="Escuchar" class="img-responsive" alt="Responsive image" >
+                         </div>
+                </header>
+
+                <section action="/form" method="post">
+
+<!--Primer linea de comandos (Botones superiores)-->      
+                        <div class="row">
+                           
+                            <div class="col-md-6 col-md-offset-3 col-xs-12">
+
+                                <div class="col-xs-4 col-sm-3">
+                           
+                                    <div id="boton_rosa"  nro_t="1" nro="1" class="Boton_select">
+                                    <!--<p> A B C</p>
+                                    <p> D E F</p>-->
+                                    </div>     
+                           
+                                 </div>
+     
+                             <div class="col-xs-4 col-sm-3">
+                           
+                                    <div id="boton_rojo" nro_t="1" nro="2" class="Boton_select" >
+                                  <!--  <p>G H I</p>
+                                    <p>J K L</p>-->
+                           
+                                    </div>
+                           
+                             </div>
+     
+                             <div class="col-xs-4 col-sm-3">
+                           
+                                    <div id="boton_verde" nro_t="1" nro="3" class="Boton_select" >
+                                  <!--   <P>M N O</P>
+                                    <p>P Q R</p>-->
+                                   </div>
+                           
+                             </div>      
+
+                            </div>
+
+                        </div>  
+
+<!--Segunda linea de comandos (Botones secundarios)-->      
+                        <div class="row">
+                           
+                            <div class="col-md-6 col-md-offset-3 col-xs-12">
+
+                                <div class="col-xs-4 col-sm-3">
+                           
+                                    <div id="boton_amarillo"  nro_t="1" nro="4" class="Boton_select" >
+                                       <!--  <P>S T U</P>
+                                        <p>V W X</P>-->
+                                    </div>   
+                           
+                                 </div>
+     
+                             <div class="col-xs-4 col-sm-3">
+                           
+                                    <div id="boton_naranja" nro_t="1" nro="5" class="Boton_select" >
+                                        <!-- <P>Y Z 1</P>
+                                        <p>2 3 4</P>-->
+                                    </div>
+                           
+                             </div>
+     
+                             <div class="col-xs-4 col-sm-3">
+                           
+                                    <div id="boton_celeste" nro_t="1" nro="6" class="Boton_select" >
+                                    <!--    <p>5 6 7</p>
+                                        <p>8 9 0</p>  -->
+                                    </div>
+                        
+                             </div>      
+                            </div>
+                        </div>                            
+                        </br>
+<!--Tercer linea de comandos (Botones)-->      
+                        <div class="row">
+                           
+                            <div class="col-xs-12 col-sm-4 col-md-offset-4">
+                        
+                               <div class='define'>
+                                <input id="espacio"     type="button" class="btn btn-primary btn-sm" value="Espacio"  />
+                                <input id="borrar"      type="button" class="btn btn-primary btn-sm" value="Borrar"  />
+                                <input id="borrar_todo" type="button" class="btn btn-primary btn-sm" value="Borrar Todo"/>
+                              </div>
+
+                            </div>
+                        
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-5 col-md-offset-5">
+                                <input id="cancelar" type="button" class="btn btn-primary btn-sm" value="Cancelar"/>
+                            </div>
+                        </div>                        
+
+                 </section>
+
+            </div>
+    </body>
+</html>
