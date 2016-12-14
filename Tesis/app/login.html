@@ -1,0 +1,140 @@
+<!-- Login.html  -->
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ <script type="text/javascript" src="js/jquery.js"></script>
+ <script type="text/javascript" src="js/controller.js"></script>
+
+<title>ELAMobile - Login</title>
+
+</head>
+
+  <body>
+
+<nav role="navigation" class="navbar navbar-default">
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">ELAMobile</a>
+        </div>
+ 
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html">Inicio</a></li>
+            </ul>
+        </div>
+</nav>
+
+<!--Cabecera-->
+
+		<header>
+              
+              <div class="row">
+                
+                 <div class="col-xs-12 col-md-12">
+                    </br>
+                    <center><h4>ELAMobile</h4></center>
+
+                 </div>
+
+              </div>
+
+        </header>
+       
+<!--Ingreso-->
+     </br>
+	 <div id=BodyContein  class="container">
+
+<!--Usuario-->
+
+	 	  <div class="row">
+
+<!--LABEL-->
+            <div class="col-md-6 col-md-offset-3 col-xs-12">
+
+                <div class="col-xs-12 col-sm-2">
+                    
+                    
+                  <!--   <div id="usuario"  usuario='user'>
+
+                     <label for="user" class="col-lg-2 control-label">Usuario</label>               
+
+                    </div>    -->	
+ 
+
+                </div>
+
+<!--Caja de texto-->
+                <div class="col-xs-12 col-sm-9">
+                    <div id="usuario"  usuario='user'>
+	                    <div style="margin-bottom:0px" class="input-group">
+	                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+	                        <input id="user" type="text" class="form-control value="" placeholder="Usuario" required class="form-control input-lg" autofocus="">    
+	                     </div>                       
+                    </div>     
+
+                </div>
+
+	 	    </div>
+
+        </div>
+
+<!--Contraseña-->
+          </br>
+	 	  <div class="row">
+
+<!--LABEL-->
+            <div class="col-md-6 col-md-offset-3 col-xs-12">
+                <div class="col-xs-12 col-sm-2">
+                                      
+                 <!--   <div id="pass"  pass='pass'>
+
+                      <label for="pass" class="col-lg-2 control-label">Contraseña</label>                    
+                    </div>     -->	
+                </div>
+
+<!--Caja de texto-->
+                <div class="col-xs-12 col-sm-9">                    
+                    <div id="pass_div"  pass='pass'>
+	                    <div style="margin-bottom: 10px" class="input-group">
+	                       <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+	                       <input id="pass" type="password" class="form-control" name="password" placeholder="Contraseña" required="" >
+	                     </div>   
+                    </div>     
+                 </div>                 
+            </div>   
+        </div>
+<!--Botonera-->
+        </br>
+            <div class="col-md-6 col-md-offset-3 col-xs-12">
+                <div class="col-xs-12 col-sm-2">
+                 <!--   <div id="pass"  pass='pass'>
+
+                      <label for="pass" class="col-lg-2 control-label">Contraseña</label>                    
+                    </div>     -->	
+                </div>
+<!--Boton-->
+                <div class="col-xs-12 col-sm-9">
+                    <div id="pass_div"  pass='pass'>
+                      <input id="aceptar_login"  login="administrar" type="submit" class="btn btn-primary btn-block" value="Aceptar" />
+                    </div>  
+                 </div>                
+            </div>         
+	</div>
+            </br>
+            <div class="text-center">
+	        	<a href="pass.html" tabindex="5" class="forgot-password">Olvido Contraseña?</a>
+	     	</div>
+	 </body>
+ </html>
