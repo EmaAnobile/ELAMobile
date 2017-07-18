@@ -1,0 +1,18 @@
+<a href="<?php echo $this->url(array('action' => 'alta')) ?>" class="btn btn-primary">Nuevo</a>
+<table class="table">
+    <tr>
+        <td>Razon social</td>
+        <td>Acciones</td>
+    </tr>
+    <?php foreach ($this->listado as $item) : ?>
+        <tr>
+            <td>
+                <?php echo $item->getRazonSocial(); ?>
+            </td>
+            <td>
+                <a href="<?php echo $this->url(array('action' => 'modificar', 'id' => $item->getId())) ?>">Editar</a>
+                <a href="<?php echo $this->url(array('action' => 'baja', 'id' => $item->getId())) ?>">Borrar</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

@@ -1,0 +1,20 @@
+<a href="<?php echo $this->url(array('action' => 'carrito')) ?>" class="btn btn-primary">Carrito</a>
+<table class="table">
+    <tr>
+        <td>Fecha</td>
+        <td>Borrador</td>
+        <td>Precio</td>
+        <td>Acciones</td>
+    </tr>
+    <?php foreach ($this->listado as /* @var $item Model_Row_Compra */ $item) : ?>
+        <tr>
+            <td><?php echo $item->getFecha(); ?></td>
+            <td><?php echo $item->getBorrador() ? "Si" : "No"; ?></td>
+            <td><?php echo $item->getPrecio(); ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('action' => 'modificar', 'id' => $item->getId())) ?>">Editar</a>
+                <a href="<?php echo $this->url(array('action' => 'baja', 'id' => $item->getId())) ?>">Borrar</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

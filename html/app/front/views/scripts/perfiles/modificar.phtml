@@ -1,0 +1,88 @@
+<?php
+$permisos = array(
+    /**
+     * recurso => array(
+     *   'titulo' => Nombre a mostrar,
+     *   'permisos' => array(privilegio => Nombre privilegio)
+     * )
+     */
+    'instituciones' => array(
+        'titulo'   => 'Instituciones',
+        'permisos' => array(
+            'alta'         => 'Alta', 
+            'baja'         => 'Baja', 
+            'modificacion' => 'Modificacion', 
+            'listado'      => 'Listado',
+            'administrar'  => 'Administrar institucion asignada',
+            )
+    ),
+    'perfiles' => array(
+        'titulo'   => 'Perfiles',
+        'permisos' => array(
+            'alta'         => 'Alta', 
+            'baja'         => 'Baja', 
+            'modificacion' => 'Modificacion', 
+            'listado'      => 'Listado')
+    ),
+    'usuarios' => array(
+        'titulo'   => 'Usuarios',
+        'permisos' => array(
+            'alta'         => 'Alta', 
+            'baja'         => 'Baja', 
+            'modificacion' => 'Modificacion', 
+            'listado'      => 'Listado')
+    ),
+    'roles' => array(
+        'titulo'   => 'Roles',
+        'permisos' => array(
+            'alta'         => 'Alta', 
+            'baja'         => 'Baja', 
+            'modificacion' => 'Modificacion', 
+            'listado'      => 'Listado')
+    ),
+    'compras' => array(
+        'titulo'   => 'Compras',
+        'permisos' => array(
+            'alta'         => 'Alta', 
+            'baja'         => 'Baja', 
+            'modificacion' => 'Modificacion', 
+            'listado'      => 'Listado')
+    ),
+    
+);
+$permisosPerfil = array();
+
+foreach ($this->Perfil->getPermisos() as $permiso) {
+  
+    if (!isset($permisosPerfil[$permiso->getRecurso()]))
+    
+        $permisosPerfil[$permiso->getRecurso()] = array();
+
+        $permisosPerfil[$permiso->getRecurso()][] = $permiso->getPrivilegio();
+}
+
+function existePermiso($permisosPerfil, $r, $p) {
+    return isset($permisosPerfil[$r]) && in_array($p, $permisosPerfil[$r]);
+}
+?>
+
+<form method="Post">
+
+    <label>Nombre</label>
+    <input name="nombre" value="<?php echo $this->Perfil->getNombre(); ?>"/>
+    <div class="container">
+        <?php foreach ($permisos as $key => $datos) : ?>
+            <div class="row"><?php echo $datos['titulo'] ?></div>
+            <?php foreach ($datos['permisos'] as $permiso => $label) : ?>
+                <div class="col-md-4">
+                    <input type="hidden"   name="<?php echo sprintf('permisos[%s][%s]', $key, $permiso) ?>" value="0"/>
+                    <input type="checkbox" name="<?php echo sprintf('permisos[%s][%s]', $key, $permiso) ?>" value="1" <?php echo existePermiso($permisosPerfil, $key, $permiso) ? ' checked' : '' ?>/>
+                    <?php echo $label ?>
+                </div>
+            <?php endforeach; ?>
+            <div class="clearfix"></div>
+        <?php endforeach; ?>
+    </div>
+    <div class="clearfix"></div>
+    <input type="submit" value="Guardar"/>
+</form>

@@ -1,0 +1,33 @@
+<?php
+
+$perfiles = array();
+
+foreach ($this->Perfil->getPerfiles() as $permiso) {
+
+    $perfiles[$permiso->getId()] = true;
+}
+
+function existePermiso($permisosPerfil, $r) {
+    return isset($permisosPerfil[$r]);
+}
+?>
+
+<form method="Post">
+
+    <label>Nombre</label>
+    <input name="nombre" value="<?php echo $this->Perfil->getNombre(); ?>"/>
+    <div class="container">
+        <?php foreach ($this->Perfiles as $perfil) : ?>
+                <div class="col-md-4">
+                    <input type="hidden"   name="<?php echo sprintf('perfiles[%s]', $perfil->getId()) ?>" value="0"/>
+                    <input type="checkbox" id="perfil-<?php echo $perfil->getId() ?>" name="<?php echo sprintf('perfiles[%s]', $perfil->getId()) ?>" value="1" <?php echo existePermiso($perfiles, $perfil->getId()) ? ' checked' : '' ?>/>
+                    <label for="perfil-<?php echo $perfil->getId() ?>">
+                        <?php echo $perfil->getNombre() ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+            <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+    <input type="submit" value="Guardar"/>
+</form>

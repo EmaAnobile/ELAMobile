@@ -1,0 +1,27 @@
+<!doctype>
+<html>
+<head>
+    <?php echo $this->render('_html/head.phtml') ?>      
+</head>
+<body>
+    <?php echo $this->render('_html/cabecera.phtml') ?>
+
+  <div class="<?php echo APPLICATION_ENV ?>">
+        <div class="span-11">
+            <h3>Exception information:</h3>
+            <p>
+                <b>Class:</b> <?php echo get_class($this->exception) ?>
+                <br />
+                <b>Message:</b> <?php echo $this->exception->getMessage() ?>
+            </p>
+        </div>
+        <div class="column">
+            <h3>Request Parameters:</h3>
+            <?php Zend_Debug::dump($this->request->getParams()) ?>
+        </div>
+        <div class="clear"></div>
+        <h3>Stack trace:</h3>
+        <pre style="overflow:scroll;"><?php echo $this->exception->getTraceAsString() ?></pre>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+Controllers:
+
+// Agrego un mensaje
+$this->getHelper('FlashMessenger')->addMessage("Mensaje");
+
+// Obtener y limpiar mensajes
+$this->getHelper('FlashMessenger')->getMessages() 
+
+
+
+
+Models: 
+
+// Delete en tabla de referencia del model
+$instanciaModel->delete(array(
+    // Columna de condicion 1
+    'columna_1 = ?' => 'valor comparacion',
+    // Columna de condicion 2
+    'columna_2 = ?' => 'valor comparacion',
+));
+
+
+// Insert en tabla de referencia del model
+$instanciaModel->insert(array(
+    'columna_1' => 'valor a insertar',
+    'columna_2' => 'valor a insertar',
+));

@@ -1,0 +1,55 @@
+<?php
+$tableros = $this->Usuario->getTablerosIds();
+
+function existeTablero($tableros, $tablero_id) {
+    return in_array($tablero_id, $tableros);
+}
+?>
+
+<div class="container-fluid">
+    <form method="Post">
+        <div class="form-group">
+            <label>Nombre de usuario</label>
+            <input name="usuario" value="<?php echo $this->Usuario->getUsuario(); ?>" class="form-control" />
+        </div>
+        <?php if ($this->admin_institucion == false) : ?>
+            <div class="form-group">
+                <label>Rol</label>
+                <select name="rol_id" class="form-control">
+                    <?php foreach ($this->Roles as $rol) : ?>
+                        <option value="<?php echo $rol->getId() ?>"<?php echo $this->Usuario->getRolId() == $rol->getId() ? ' selected' : '' ?>>
+                            <?php echo $rol->getNombre() ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Institucion</label>
+                <select name="institucion_id" class="form-control">
+                    <option value="">Usuario de sistema</option>
+                    <?php foreach ($this->instituciones as $item) : ?>
+                        <option value="<?php echo $item->getId() ?>"<?php echo $this->Usuario->getInstitucionId() == $item->getId() ? ' selected' : '' ?>>
+                            <?php echo $item->getRazonSocial() ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php endif; ?>
+
+        <div class="form-group">
+            <label>Tableros</label>
+            <div class="row">
+                <?php foreach ($this->Tableros as $tablero) : ?>
+                    <div class="col-md-4">
+                        <input type="hidden"   name="<?php echo sprintf('tablero[%s]', $tablero->getId()) ?>" value="0"/>
+                        <input type="checkbox" name="<?php echo sprintf('tablero[%s]', $tablero->getId()) ?>" value="1" id="tablero-<?php echo $tablero->getId() ?>" <?php echo existeTablero($tableros, $tablero->getId()) ? ' checked' : '' ?>/>
+                        <label for="tablero-<?php echo $tablero->getId() ?>"><?php echo $tablero->getCodigo() ?></label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <input type="submit" value="Guardar"/>
+    </form>
+</div>

@@ -1,0 +1,23 @@
+<a href="<?php echo $this->url(array('action' => 'alta')) ?>" class="btn btn-primary">Nuevo</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->listado as $item) : ?>
+            <tr<?php echo $item->getSistema() ? ' class="danger"' : '' ?>>
+                <td>
+                    <?php echo $item->getNombre(); ?>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url(array('action' => 'modificar', 'id' => $item->getId())) ?>">Editar</a>
+                    <a href="<?php echo $this->url(array('action' => 'baja', 'id' => $item->getId())) ?>">Borrar</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<div class="bg-danger col-md-2">Roles de sistema</div>
