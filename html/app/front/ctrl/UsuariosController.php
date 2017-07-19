@@ -46,12 +46,12 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
                     $session->usuario = $adapter->getResultRowObject();
 
                     $url = $this->view->url(array(), 'default', true);
+                    /*
+                      if ($session->usuario->rol === 'admin') {
 
-                    if ($session->usuario->rol === 'admin') {
-
-                        $url = $this->view->url(array(), 'administracion');
-                    }
-
+                      $url = $this->view->url(array(), 'administracion');
+                      }
+                     */
                     $this->getHelper('redirector')
                             ->gotoUrlAndExit($this->view->serverUrl($url));
                     return;
