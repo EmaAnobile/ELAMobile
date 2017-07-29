@@ -1,34 +1,53 @@
-Entrar;Entrar
-Usuario;Usuario
-Contraseña;Contraseña
-Aceptar;Aceptar
-"Olvido Contraseña?";"Olvido Contraseña?"
-"Bienvenido %s %s";"%2$s Welcome %1$s"
-Inicio;Inicio
+Ingrese mensaje:;"Enter message:"
+Escuchar;Hear
+Espacio;Space
+Borrar;Delete
+Borrar Todo;"Delete All"
+Cancelar;Cancel
+Inicio;Home
 index;index
-index;index
-Acceder;Acceder
-usuarios;usuarios
-acceder;acceder
-Configuracion;Configuracion
-usuarios;usuarios
-acceder;acceder
-Ingles;Ingles
-usuarios;usuarios
-logout;logout
-"Cerrar Sesion";"Cerrar Sesion"
-"Ingrese mensaje:";"Ingrese mensaje:"
-Escuchar;Escuchar
-Espacio;Espacio
-Borrar;Borrar
-"Borrar Todo";"Borrar Todo"
-Cancelar;Cancelar
-Instituciones;Instituciones
-instituciones;instituciones
-Perfiles;Perfiles
-perfiles;perfiles
+Instituciones;Institutions
+Perfiles;Profiles
 Roles;Roles
+Usuarios;Users
+Compras;Purchases
+Configuracion;Configuration
+Ingles;English
+logout;logout
+Cerrar Sesion;"Sign off"
+alta;New
+Nuevo;New
+Razon social;"Business name"
+Acciones;Actions
+modificar;edit
+Editar;Edit
+baja;delete
+Nombre;Name
+Roles de sistema;"System Roles"
+carrito;shopping cart
+Fecha;Date
+Borrador;Draft
+Precio;Price
+Si;Yes
+Guardar;Save
+Modificacion;Modification
+Listado;List
+Administrar institucion asignada;"Manage Assigned Institution"
+Nombre de usuario;"User Name"
+Rol;Rol
+Institucion;Institution
+Usuario de sistema;"System User"
+Tableros;Dashboard
+instituciones;instituciones
+perfiles;profiles
 roles;roles
-Usuarios;Usuarios
-Compras;Compras
-compras;compras
+usuarios;users
+compras;purchases
+Acceder;Login
+acceder;login
+Entrar;Enter
+Usuario;User
+Contraseña;Password
+Aceptar;Accept
+"Olvido Contraseña?";"Forgot Password?"
+" Cerrar Sesion";" Log Out"

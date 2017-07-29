@@ -54,7 +54,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $ctrl->setParam('disableOutputBuffering', true);
         $ctrl->setControllerDirectory(array(
             'default' => APPLICATION_PATH . '/front/ctrl',
-            'back' => APPLICATION_PATH . '/back/ctrl',
+            'back'    => APPLICATION_PATH . '/back/ctrl',
         ));
 
         $ctrl->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(

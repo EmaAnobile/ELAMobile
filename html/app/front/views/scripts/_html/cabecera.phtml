@@ -34,7 +34,8 @@ $idiomas = array('es' => 'Espaniol', 'en' => 'Ingles');
                                 ?>
                                 <li>
                                     <a href="<?php echo $this->url(array('locale' => $key), null, null, $key) ?>">
-                                        <img src="<?php echo $this->serverUrl('img/idioma-' . $key . '.jpg') ?>" />
+                                      <img src="<?php echo $this->baseUrl('img/idioma-' . $key . '.png')?>" />
+                                              <!--  //Server-->                                        
                                         <?php echo __($title) ?>
                                     </a>
                                 </li>
@@ -45,8 +46,7 @@ $idiomas = array('es' => 'Espaniol', 'en' => 'Ingles');
                             Zend_Registry::set('Zend_Locale', new Zend_Locale($idioma));
                             ?>
                         </ul>
-                        <a href="<?php echo $this->url(["controller" => "usuarios", "action" => "logout"], "default") ?>">
-                            <span class="glyphicon glyphicon-off"></span><?php echo __('Cerrar Sesion') ?></a>
+                        <a href="<?php echo $this->url(["controller" => "usuarios", "action" => "logout"], "default") ?>"><span class="glyphicon glyphicon-off"></span><?php echo __(' Cerrar Sesion') ?></a>
                     </li>
                 </ul>
             </li>

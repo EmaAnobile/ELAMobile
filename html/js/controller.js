@@ -49,6 +49,10 @@ $(document).ready(function (data) {
 
 function inicializar_botones() {
     $('#cancelar').hide();
+    $('#borrar').show();
+    $('#borrar_todo').show();
+    $('#espacio').show();
+        
     $('.Boton_select').html('');
 
     var keys = Object.keys(grupos);
@@ -76,6 +80,9 @@ function procesar_boton(objeto) {
         $('.Boton_select').removeAttr('data-grupo');
         $('.Boton_select').removeData('grupo');
         $('#cancelar').show();
+        $('#borrar').hide();
+        $('#borrar_todo').hide();
+        $('#espacio').hide();        
         procesar_grupo(grupos[idGrupo]);
     } else {
         mostrar_texto($(objeto).find('.texto').html());
