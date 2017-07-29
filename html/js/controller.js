@@ -59,7 +59,7 @@ function inicializar_botones() {
         var htmlGrupo = '<p>';
         for (var j = 0; j < textos.length; j++) {
             var texto = textos[j];
-            htmlGrupo += '<div class="col-md-4">' + texto + '</div>';
+            htmlGrupo += '<div class="col-md-4 col-sm-4 col-xs-6">' + texto + '</div>';
         }
         htmlGrupo += '</p>';
 
