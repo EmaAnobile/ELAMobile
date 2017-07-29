@@ -4,7 +4,7 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
 
     public function accederAction() {
         //Setea nombre a la solapa       
-        $this->view->headTitle('Entrar');
+        $this->view->headTitle(__('Entrar'));
 
         $auth = Zend_Auth::getInstance();
 
@@ -151,7 +151,7 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
         $id = $this->getRequest()->getParam("id");
 
         if ($usuarioActual->getId() == $id) {
-            $this->getHelper('FlashMessenger')->addMessage('danger|No se puede editar el mismo usuario que esta utilizando el sistema');
+            $this->getHelper('FlashMessenger')->addMessage('danger|' . __('No se puede editar el mismo usuario que esta utilizando el sistema'));
             $url = $this->view->url(array('id' => null, 'action' => 'index'));
             $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
             return;
@@ -233,7 +233,7 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
                 $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
                 return;
             } catch (Exception $ex) {
-                $mensajes[] = 'danger|' . $ex->getMessage();
+                $mensajes[] = 'danger|' . __($ex->getMessage());
             }
         }
 

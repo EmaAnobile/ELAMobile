@@ -1,5 +1,7 @@
 <?php
 
+require_once 'funciones.php';
+
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected $_config;
@@ -32,6 +34,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'menu' => array(
                 'namespace' => 'Menu',
                 'path' => 'menus',
+        )));
+
+        $autoloader->addResourceTypes(array(
+            'service' => array(
+                'namespace' => 'Service',
+                'path' => 'services',
         )));
     }
 
@@ -140,6 +148,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Registry::set('Zend_Acl', $acl);
     }
 
+    protected function _initLocale() {
+        $config = [
+            'scan' => Zend_Translate::LOCALE_DIRECTORY,
+            'disableNotices' => false,
+        ];
+
+        $log = true;
+        if ($log) {
+            $config['log'] = new Service_LoggerTraduccion();
+            $config['logUntranslated'] = true;
+        }
+
+        $tr = new Zend_Translate('csv', APPLICATION_PATH . '/data/langs/', null, $config);
+        Zend_Registry::set('Zend_Translate', $tr);
+    }
+
     protected function _initRouters() {
 
         $ctrl = $this->getResource('FrontController');
@@ -147,18 +171,30 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 //FRONT
         $router->addRoute('default', new Zend_Controller_Router_Route(
-                ':controller/:action/*', array(
+                ':locale/:@controller/:@action/*', array(
             'controller' => 'index',
-            'action' => 'index'
+            'action' => 'index',
+            'locale' => APPLICATION_LANG
         )));
 
-//BACK
-        $router->addRoute('administracion', new Zend_Controller_Router_Route(
-                'backend/:controller/:action/*', array(
-            'module' => 'back',
-            'controller' => 'index',
-            'action' => 'index'
-        )));
+        $idioma = APPLICATION_LANG;
+
+        if (Zend_Locale::isLocale($idioma)) {
+            $idioma = APPLICATION_LANG;
+        }
+
+        $_alias = [
+            'es' => 'es_AR',
+            'en' => 'en_US',
+        ];
+
+        $idioma_locale = isset($_alias[$idioma]) ? $_alias[$idioma] : $idioma;
+
+        $adp = Zend_Registry::get('Zend_Translate')->getAdapter();
+        $adp->setLocale($idioma);
+        Zend_Locale::setDefault($idioma_locale);
+        Zend_Registry::set('Zend_Locale', new Zend_Locale($idioma_locale));
+        $router->setGlobalParam('locale', $idioma);
     }
 
     protected function _initViewHelpers() {

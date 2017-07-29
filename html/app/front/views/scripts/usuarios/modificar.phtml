@@ -9,12 +9,12 @@ function existeTablero($tableros, $tablero_id) {
 <div class="container-fluid">
     <form method="Post">
         <div class="form-group">
-            <label>Nombre de usuario</label>
+            <label><?php echo __('Nombre de usuario') ?></label>
             <input name="usuario" value="<?php echo $this->Usuario->getUsuario(); ?>" class="form-control" />
         </div>
         <?php if ($this->admin_institucion == false) : ?>
             <div class="form-group">
-                <label>Rol</label>
+                <label><?php echo __('Rol') ?></label>
                 <select name="rol_id" class="form-control">
                     <?php foreach ($this->Roles as $rol) : ?>
                         <option value="<?php echo $rol->getId() ?>"<?php echo $this->Usuario->getRolId() == $rol->getId() ? ' selected' : '' ?>>
@@ -24,9 +24,9 @@ function existeTablero($tableros, $tablero_id) {
                 </select>
             </div>
             <div class="form-group">
-                <label>Institucion</label>
+                <label><?php echo __('Institucion') ?></label>
                 <select name="institucion_id" class="form-control">
-                    <option value="">Usuario de sistema</option>
+                    <option value=""><?php echo __('Usuario de sistema') ?></option>
                     <?php foreach ($this->instituciones as $item) : ?>
                         <option value="<?php echo $item->getId() ?>"<?php echo $this->Usuario->getInstitucionId() == $item->getId() ? ' selected' : '' ?>>
                             <?php echo $item->getRazonSocial() ?>
@@ -37,7 +37,7 @@ function existeTablero($tableros, $tablero_id) {
         <?php endif; ?>
 
         <div class="form-group">
-            <label>Tableros</label>
+            <label><?php echo __('Tableros') ?></label>
             <div class="row">
                 <?php foreach ($this->Tableros as $tablero) : ?>
                     <div class="col-md-4">
@@ -50,6 +50,6 @@ function existeTablero($tableros, $tablero_id) {
         </div>
         <div class="clearfix"></div>
 
-        <input type="submit" value="Guardar"/>
+        <input type="submit" value="<?php echo __('Guardar') ?>"/>
     </form>
 </div>

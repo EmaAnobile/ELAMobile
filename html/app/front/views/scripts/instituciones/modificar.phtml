@@ -1,6 +1,6 @@
 <form method="Post">
-    <label>Razon social</label>
+    <label><?php echo __('Razon social') ?></label>
     <input name="razon_social" value="<?php echo $this->item->getRazonSocial(); ?>"/>
     <div class="clearfix"></div>
-    <input type="submit" value="Guardar"/>
+    <input type="submit" value="<?php echo __('Guardar') ?>"/>
 </form>

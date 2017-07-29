@@ -14,7 +14,7 @@ defined('DOC_ROOT') || define('DOC_ROOT', dirname(__FILE__));
 /**
  * Directorio donde ira a buscar el bootstrap, y los controladores
  */
-defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(DOC_ROOT. '/app'));
+defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(DOC_ROOT . '/app'));
 
 defined('DATA_PATH') || define('DATA_PATH', APPLICATION_PATH . '/data');
 
@@ -34,6 +34,26 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(DOC_ROOT . '/libs'),
     get_include_path(),
 )));
+
+/**
+ * Idioma por defecto de la aplicacion
+ */
+require_once 'Zend/Locale.php';
+$langs = array_keys(Zend_Locale::getOrder());
+$lang = isset($langs[0]) ? preg_replace('/\_.*/', '', $langs[0]) : 'es';
+
+if (isset($_SERVER['REQUEST_URI'])) {
+    if (preg_match('#/(([\w][\w])$|([\w][\w])/|([\w][\w])$|([\w][\w])/)#', $_SERVER['REQUEST_URI'], $matches)) {
+        $lang = str_replace('/', '', $matches[1]);
+    }
+}
+
+if (!file_exists(APPLICATION_PATH . '/data/langs/' . DS . $lang)) {
+    $lang = 'es';
+}
+
+defined('APPLICATION_LANG') || define('APPLICATION_LANG', $lang);
+
 
 /**
  * Carga la aplicacion con el entorno y el path del archivo de configuracion

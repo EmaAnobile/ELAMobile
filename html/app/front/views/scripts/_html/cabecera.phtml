@@ -1,3 +1,9 @@
+<?php
+$adp = Zend_Registry::get('Zend_Translate')->getAdapter();
+$idioma = $adp->getLocale();
+$idiomas = array('es' => 'Espaniol', 'en' => 'Ingles');
+?>
+
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -14,12 +20,33 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><span class="glyphicon glyphicon glyphicon-cog"></span> Configuración</b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <b><span class="glyphicon glyphicon glyphicon-cog"></span>
+                        <?php echo __('Configuracion') ?></b></a>
                 <ul id="login-dp" class="dropdown-menu">
                     <li>
-                        <a href="login.html" ><span class="glyphicon glyphicon-user"></span> Administrador</a>
+                        <ul class="list-unstyled">
+                            <?php foreach ($idiomas as $key => $title) : ?>
+                                <?php
+                                $adp->setLocale($key);
+                                Zend_Locale::setDefault($key);
+                                Zend_Registry::set('Zend_Locale', new Zend_Locale($key));
+                                ?>
+                                <li>
+                                    <a href="<?php echo $this->url(array('locale' => $key), null, null, $key) ?>">
+                                        <img src="<?php echo $this->serverUrl('img/idioma-' . $key . '.jpg') ?>" />
+                                        <?php echo __($title) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                            <?php
+                            $adp->setLocale($idioma);
+                            Zend_Locale::setDefault($idioma);
+                            Zend_Registry::set('Zend_Locale', new Zend_Locale($idioma));
+                            ?>
+                        </ul>
                         <a href="<?php echo $this->url(["controller" => "usuarios", "action" => "logout"], "default") ?>">
-                            <span class="glyphicon glyphicon-off"></span> Cerrar Sesión</a>
+                            <span class="glyphicon glyphicon-off"></span><?php echo __('Cerrar Sesion') ?></a>
                     </li>
                 </ul>
             </li>

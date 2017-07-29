@@ -1,8 +1,10 @@
-<a href="<?php echo $this->url(array('action' => 'alta')) ?>" class="btn btn-primary">Nuevo</a>
+<a href="<?php echo $this->url(array('action' => 'alta')) ?>" class="btn btn-primary">
+    <?php echo __('Nuevo') ?>
+</a>
 <table class="table">
     <tr>
-        <td>Nombre</td>
-        <td>Acciones</td>
+        <td><?php echo __('Nombre') ?></td>
+        <td><?php echo __('Acciones') ?></td>
     </tr>
     <?php foreach ($this->listado as $item) : ?>
         <tr>
@@ -10,9 +12,12 @@
                 <?php echo $item->getNombre(); ?>
             </td>
             <td> 
-                <a href="<?php echo $this->url(array('action' => 'modificar', 'id' => $item->getId())) ?>">Editar</a>
-                
-                <a href="<?php echo $this->url(array('action' => 'baja',      'id' => $item->getId())) ?>">Borrar</a>
+                <a href="<?php echo $this->url(array('action' => 'modificar', 'id' => $item->getId())) ?>">
+                    <?php echo __('Editar') ?>
+                </a>
+                <a href="<?php echo $this->url(array('action' => 'baja', 'id' => $item->getId())) ?>">
+                    <?php echo __('Borrar') ?>
+                </a>
             </td>
         </tr>
     <?php endforeach; ?>
