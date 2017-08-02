@@ -3,6 +3,7 @@
 class UsuariosController extends Zend_Controller_Action implements Interface_ICatalogoFacadeController {
 
     public function accederAction() {
+//        echo 'Pasa';
         //Setea nombre a la solapa       
         $this->view->headTitle(__('Entrar'));
 
@@ -20,6 +21,8 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
         }
 
         if ($this->getRequest()->isPost()) {
+//            echo 'Otra vez';
+//            die();
             $usuario = $this->getRequest()->getPost('usuario');
             $password = $this->getRequest()->getPost('password');
             $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -59,6 +62,7 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
             }
             $this->view->assign("error_form", $error);
         }
+        $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
     public function logoutAction() {
@@ -72,41 +76,68 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
                 ->gotoUrlAndExit($url);
     }
 
-    public function restaurarPasswordAction() {
+    public function confirmarAction() {
+        $this->view->headTitle('Confirmar nueva contraseña');
+
+        if ($this->getRequest()->isPost()) {
+            $db = new Model_Usuarios();
+            $usuario = $this->getRequest()->getPost('usuario');
+            $password = $this->getRequest()->getPost('password');
+            $hash_validacion = $this->getRequest()->getParam('hash');
+            /* @var $usu Model_Row_Usuario  */
+            $usu = $db->fetchRow(array(
+                'usuario = ?' => $usuario
+            ));
+
+            $hash = $usu->getHashValidacion();
+            if ($hash == $hash_validacion) {
+                $usu->password = $password;
+                $usu->save();
+                $this->getHelper('FlashMessenger')->addMessage(__('Contraseña actualizada'));
+
+                $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($this->view->url(array('action' => 'acceder', 'hash' => null))));
+                return;
+            }
+
+            $this->view->assign('mensajes', array(
+                'danger|' . __('Usuario incorrecto')
+            ));
+        }
+    }
+
+    public function recuperarAction() {
         $this->view->headTitle('Recuperar password');
 
-        $form = new Back_Form_RecuperarPassword();
         if ($this->getRequest()->isPost()) {
-            if ($form->isValid($this->getRequest()->getPost())) {
-                $db = new Model_Usuarios();
+            $db = new Model_Usuarios();
+            $usuario = $this->getRequest()->getPost('usuario');
+            /* @var $usu Model_Row_Usuario  */
+            $usu = $db->fetchRow(array(
+                'usuario = ?' => $usuario
+            ));
 
-                $vals = $form->getValues();
-                $usu = $db->fetchRow(array(
-                    'usu_usuario = ?' => $vals['usuario']
-                ));
-                if ($usu === null) {
-                    $form->getElement('usuario')->addError('Usuario no encontrado');
-                } else {
-                    $pass = (string) new Service_Password();
-                    $usu->usu_password = md5($pass);
 
-                    $mail = new Zend_Mail();
-                    $mail->setFrom(Service_Config::get('mail_envio')->getActivo(), 'CharterPesca.es')
-                            ->addTo($usu->usu_email)
-                            ->setBodyText('La password es: ' . $pass)
-                            ->send();
+            $hash = $usu->getHashValidacion();
 
-                    $usu->save();
-                    $this->getHelper('FlashMessenger')->addMessage(__('Nuevo password enviado'));
+            $url = $this->view->serverUrl($this->view->url(array(
+                        'hash' => $hash,
+                        'action' => 'confirmar'
+            )));
+            $mail = new Zend_Mail();
+            $mail->addTo($usu->getEmail())
+                    ->setBodyHtml(<<<EMAIL
+                        Para restaurar su clave haga clic 
+                            <a href="{$url}">aqui</a>
+EMAIL
+                    )
+                    ->send();
+            $this->getHelper('FlashMessenger')->addMessage(__('Se enviaron las instrucciones a su casilla de correo'));
 
-                    $this->getHelper('redirector')->gotoUrlAndExit($this->view->url(array('action' => 'login')));
-                    return;
-                }
-            }
+            $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($this->view->url(array('action' => 'acceder'))));
+            return;
         }
 
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
-        $this->view->assign('form', $form);
     }
 
     //Administración de Usuarios

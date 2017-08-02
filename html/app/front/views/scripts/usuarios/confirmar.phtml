@@ -43,7 +43,7 @@
                         <div style="margin-bottom: 10px" class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                             <input id="password" name="password" type="password" class="form-control"
-                                   name="password" placeholder="<?php echo __('Contraseña') ?>" required="" >
+                                   name="password" placeholder="<?php echo __('Nueva contraseña') ?>" required="" autocomplete="new-password">
                         </div>   
                     </div>     
                 </div>                 
@@ -65,6 +65,6 @@
     </div>
     </br>
     <div class="text-center">
-        <a href="<?php echo $this->url(array('action' => 'recuperar')) ?>" tabindex="5" class="forgot-password"><?php echo __('Olvido Contraseña?') ?></a>
+        <a href="<?php echo $this->url(array('action' => 'acceder')) ?>" tabindex="5" class="forgot-password"><?php echo __('Acceder') ?></a>
     </div>
 </form>

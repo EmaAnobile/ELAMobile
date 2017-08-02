@@ -24,6 +24,7 @@ $(document).ready(function (data) {
     $("#voz").click(function () {
         // Pisamos el valor con vacío.
         //meSpeak.speak("holaaaa!");
+       
         meSpeak.speak($('#mensaje').val().toLowerCase());
     });
 

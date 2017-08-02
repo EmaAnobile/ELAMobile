@@ -18,9 +18,9 @@
                 <ul id="login-dp" class="dropdown-menu">
                     <li>
 
-                        <a href="login.html" ><span class="glyphicon glyphicon-user"></span> Administrador</a>
+                        <a href="login.html" ><span class="glyphicon glyphicon-user"></span> <?php echo $this->translate('Administrador') ?></a>
                         <a href="<?php echo $this->url(["controller" => "usuarios", "action" => "logout"], "default") ?>">
-                            <span class="glyphicon glyphicon-off"></span> Cerrar Sesión</a>
+                            <span class="glyphicon glyphicon-off"></span> <?php echo $this->translate('Cerrar Sesión') ?></a>
                     </li>
                 </ul>
             </li>

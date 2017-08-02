@@ -3,7 +3,7 @@
 class Model_Row_Usuario extends Model_Row_Abstract {
 
     Public Function getTableros() {
-        
+
         if ($this->getId() > 0)
             return $this->findManytoManyRowset('Model_Tableros', 'Model_UsuariosTableros');
 
@@ -34,6 +34,10 @@ class Model_Row_Usuario extends Model_Row_Abstract {
         if ($this->getId() == null)
             return array();
         return $this->findDependentRowset('Model_Usuarios');
+    }
+
+    public function getHashValidacion() {
+        return md5($this->getUsuario() . '-' . $this->getPassword());
     }
 
 }

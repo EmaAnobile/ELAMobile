@@ -54,7 +54,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $ctrl->setParam('disableOutputBuffering', true);
         $ctrl->setControllerDirectory(array(
             'default' => APPLICATION_PATH . '/front/ctrl',
-            'back'    => APPLICATION_PATH . '/back/ctrl',
+            'back' => APPLICATION_PATH . '/back/ctrl',
         ));
 
         $ctrl->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
@@ -93,6 +93,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
             Zend_Db_Table_Abstract::setDefaultAdapter($dbAdapter);
         }
+    }
+
+    protected function _initSmtp() {
+        Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp('smtp.gmail.com', array(
+            'ssl'=> 'tls',
+            'port' => 587,
+            'auth' => 'login',
+            'username' => 'reporte@error403.com.ar',
+            'password' => 'R3p0rt3s'
+        )));
     }
 
     protected function _initAcl() {
@@ -170,11 +180,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $router = $ctrl->getRouter();
 
 //FRONT
+        // Agregamos este route para forzar a que aparezca el idioma 
+        // y no se rompa cuando no viene
+        $router->addRoute('default_idioma', new Zend_Controller_Router_Route(
+                ':locale', array(
+            'locale' => APPLICATION_LANG
+        )));
+
         $router->addRoute('default', new Zend_Controller_Router_Route(
                 ':locale/:@controller/:@action/*', array(
             'controller' => 'index',
-            'action' => 'index',
-            'locale' => APPLICATION_LANG
+            'action' => 'index'
         )));
 
         $idioma = APPLICATION_LANG;
