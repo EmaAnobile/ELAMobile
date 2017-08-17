@@ -1,7 +1,7 @@
 <?php
 
 class RolesController extends Zend_Controller_Action implements Interface_ICatalogoFacadeController {
-
+ 
     public function indexAction() {
         // Obtengo el usuario actual
         $usuario = Zend_Registry::get('Usuario');
@@ -92,7 +92,7 @@ class RolesController extends Zend_Controller_Action implements Interface_ICatal
                         'perfil_id=?' => $perfil,
                     ));
                 } else {
-
+           
                     //Intentamos Agregar permiso
                     try {
 
@@ -116,4 +116,5 @@ class RolesController extends Zend_Controller_Action implements Interface_ICatal
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
-}
+    
+                    }

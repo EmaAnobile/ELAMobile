@@ -1,19 +1,28 @@
 <a href="<?php echo $this->url(array('action' => 'carrito')) ?>" class="btn btn-primary">Carrito</a>
 <table class="table">
     <tr>
-        <td><?php echo __('Fecha') ?></td>
-        <td><?php echo __('Borrador') ?></td>
-        <td><?php echo __('Precio') ?></td>
-        <td><?php echo __('Acciones') ?></td>
+        <?php if ($this->ocultar_institucion !== true) : ?>
+            <th><?php echo __('Institucion') ?></th>
+        <?php endif; ?>
+        <th><?php echo __('Fecha') ?></th>
+        <th><?php echo __('Borrador') ?></th>
+        <th><?php echo __('Aprobada') ?></th>
+        <th><?php echo __('Precio') ?></th>
+        <th><?php echo __('Acciones') ?></th>
     </tr>
     <?php foreach ($this->listado as /* @var $item Model_Row_Compra */ $item) : ?>
         <tr>
+            <?php if ($this->ocultar_institucion !== true) : ?>
+                <td><?php echo $item->getRazonSocial(); ?></td>
+            <?php endif; ?>
             <td><?php echo $item->getFecha(); ?></td>
             <td><?php echo __($item->getBorrador() ? "Si" : "No") ?></td>
+            <td><?php echo __($item->getAprobado() ? "Si" : "No") ?></td>
             <td><?php echo $item->getPrecio(); ?></td>
             <td>
-                <a href="<?php echo $this->url(array('action' => 'modificar', 'id' => $item->getId())) ?>"><?php echo __('Editar') ?></a>
-                <a href="<?php echo $this->url(array('action' => 'baja', 'id' => $item->getId())) ?>"><?php echo __('Borrar') ?></a>
+                <a href="<?php echo $this->url(array('action' => 'ver', 'id' => $item->getId())) ?>">
+                    <?php echo __('Ver') ?>
+                </a>
             </td>
         </tr>
     <?php endforeach; ?>

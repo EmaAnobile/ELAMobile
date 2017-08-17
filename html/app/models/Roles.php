@@ -10,5 +10,4 @@ Class Model_Roles extends Model_Abstract {
     public function getRol($rol_nombre) {
         return $this->fetchRow(['nombre = ?' => $rol_nombre]);
     }
-
 }

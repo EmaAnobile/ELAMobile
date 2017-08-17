@@ -11,6 +11,10 @@ function existeTablero($tableros, $tablero_id) {
         <div class="form-group">
             <label><?php echo __('Nombre de usuario') ?></label>
             <input name="usuario" value="<?php echo $this->Usuario->getUsuario(); ?>" class="form-control" />
+            <label><?php echo __('Password de usuario') ?></label>
+            <input name="password" type="password" value="<?php echo $this->Usuario->getPassword(); ?>" class="form-control" autocomplete="new-password" />        
+            <label><?php echo __('Email de usuario') ?></label>
+            <input name="email" type="email" value="<?php echo $this->Usuario->getEmail(); ?>" class="form-control" />        
         </div>
         <?php if ($this->admin_institucion == false) : ?>
             <div class="form-group">
@@ -42,7 +46,7 @@ function existeTablero($tableros, $tablero_id) {
                 <?php foreach ($this->Tableros as $tablero) : ?>
                     <div class="col-md-4">
                         <input type="hidden"   name="<?php echo sprintf('tablero[%s]', $tablero->getId()) ?>" value="0"/>
-                        <input type="checkbox" name="<?php echo sprintf('tablero[%s]', $tablero->getId()) ?>" value="1" id="tablero-<?php echo $tablero->getId() ?>" <?php echo existeTablero($tableros, $tablero->getId()) ? ' checked' : '' ?>/>
+                        <input type="checkbox" name="<?php echo sprintf('tablero[%s]', $tablero->getId()) ?>" value="1" id="tablero-<?php echo $tablero->getId() ?>" <?php echo existeTablero($tableros, $tablero->getId()) ? ' checked' : '' ?> />
                         <label for="tablero-<?php echo $tablero->getId() ?>"><?php echo $tablero->getCodigo() ?></label>
                     </div>
                 <?php endforeach; ?>

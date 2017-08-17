@@ -25,3 +25,18 @@ $instanciaModel->insert(array(
     'columna_1' => 'valor a insertar',
     'columna_2' => 'valor a insertar',
 ));
+
+
+
+// Asignacion de licencias
+PERIODOS: 6 meses
+Si el usuario no tiene licencia asignada:
+Se le otorgan N licencias, sumando PERIODOS por cada licencia (Siempre del mismo tipo)
+
+Si el usuario tiene al menos una licencia VIGENTE, se podran sumar PERIODOS a la vigencia
+del usuario. 
+Si se decidiera cambiar de tipo de licencia, se resetearan las licencias anterior 
+que tengan una vigencia superior o igual a un PERIODO; La nueva licencia, sumara 
+PERIODOS a partir de la fecha actual y no de la fecha de vigencia del usuario. 
+Las licencias que tengan una diferencia menor a un PERIODO se podran reasignar a 
+otro usuario que no tenga licencia asignada o este vencida.

@@ -1,0 +1,70 @@
+<div class="container-fluid">
+    <?php if ($this->confirmando) : ?>
+        <div class="mensaje-confirmacion">
+            <p class="bg-info">
+                <?php echo __('Esta a punto de confirmar la compra.') ?>
+                <?php echo __('Este proceso le otorgara a la empresa solicitante, las licencias detalladas abajo.') ?>
+                <?php echo __('Esta seguro de continuar?') ?>
+            </p>
+            <form method="post">
+                <input type="submit" value="<?php echo __('Aceptar') ?>" class="btn btn-primary" />
+                <a href="<?php echo $this->url() ?>" class="btn btn-danger">
+                    <?php echo __('Cancelar') ?>
+                </a>
+            </form>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->rechazando) : ?>
+        <div class="mensaje-confirmacion">
+            <p class="bg-info">
+                <?php echo __('Esta a punto de rechazar la compra.') ?>
+                <?php echo __('Esta seguro de continuar?') ?>
+            </p>
+            <form method="post">
+                <input type="submit" value="<?php echo __('Aceptar') ?>" class="btn btn-primary" />
+                <a href="<?php echo $this->url() ?>" class="btn btn-danger">
+                    <?php echo __('Cancelar') ?>
+                </a>
+            </form>
+        </div>
+    <?php endif; ?>
+
+    <dl>
+        <dt><?php echo __('Fecha') ?></dt>
+        <dd><?php echo $this->item->getFecha(); ?></dd>
+        <dt><?php echo __('Es borrador') ?></dt>
+        <dd><?php echo $this->item->getBorrador() ? __('Si') : __('No'); ?></dd>
+        <?php if ($this->item->getBorrador() == 0) : ?>
+            <dt><?php echo __('Esta aprobada') ?></dt>
+            <dd><?php echo $this->item->getAprobado() ? __('Si') : __('No'); ?></dd>
+        <?php endif; ?>
+        <dt><?php echo __('Total') ?></dt>
+        <dd><?php echo $this->currency($this->item->getPrecio()) ?></dd>
+    </dl>
+    <table class="table table-bordered">
+        <tr>
+            <th><?php echo __('Tipo de licencia') ?></th>
+            <th><?php echo __('Precio') ?></th>
+            <th><?php echo __('Cantidad') ?></th>
+            <th><?php echo __('Subtotal') ?></th>
+        </tr>
+        <?php foreach ($this->item->getDetalles() as /* @var $detalle Model_Row_CompraDetalle */ $detalle) : ?>
+            <tr>
+                <td><?php echo $detalle->getTipoLicencia()->getNombre() ?></td>
+                <td><?php echo $detalle->getPrecio() ?></td>
+                <td><?php echo $detalle->getCantidad() ?></td>
+                <td><?php echo $detalle->getPrecioFinal() ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+
+    <?php if ($this->confirmando == false && $this->rechazando == false && $this->item->getBorrador() == 1) : ?>
+        <a href="?confirmar" class="btn btn-success btn-theme">
+            <?php echo __('Confirmar') ?>
+        </a>
+        <a href="?rechazar" class="btn btn-danger btn-theme">
+            <?php echo __('Rechazar') ?>
+        </a>
+    <?php endif; ?>
+</div>            

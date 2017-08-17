@@ -69,3 +69,7 @@ textarea {
     margin-left: 10%;
     margin-right: auto;*/
 }
+
+.mensaje-confirmacion p {
+    padding: 15px;
+}

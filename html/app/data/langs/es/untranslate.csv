@@ -91,3 +91,32 @@ recuperar;recuperar
 confirmar;confirmar
 "'%value%' does not match the expected structure for a DNS hostname";"'%value%' does not match the expected structure for a DNS hostname"
 en;en
+"Nueva contraseña";"Nueva contraseña"
+"Contraseña actualizada";"Contraseña actualizada"
+"Se enviaron las instrucciones a su casilla de correo";"Se enviaron las instrucciones a su casilla de correo"
+"Password de usuario";"Password de usuario"
+"Email de usuario";"Email de usuario"
+No;No
+Licencia;Licencia
+Cantidad;Cantidad
+Subtotal;Subtotal
+"Tipo Licencia ";"Tipo Licencia "
+carrito.phtml;carrito.phtml
+NULL;NULL
+ElaMobile;ElaMobile
+"Usted no tiene permitido comprar";"Usted no tiene permitido comprar"
+ver;ver
+Ver;Ver
+"Es borrador";"Es borrador"
+Total;Total
+"Tipo de licencia";"Tipo de licencia"
+Confirmar;Confirmar
+"Esta a punto de confirmar la compra.";"Esta a punto de confirmar la compra."
+"Este proceso le otorgara a la empresa solicitante, las licencias detalladas abajo.";"Este proceso le otorgara a la empresa solicitante, las licencias detalladas abajo."
+"Esta seguro de continuar?";"Esta seguro de continuar?"
+"Esta aprobada";"Esta aprobada"
+Aprobado;Aprobado
+Aprobada;Aprobada
+Rechazar;Rechazar
+"Esta a punto de rechazar la compra.";"Esta a punto de rechazar la compra."
+"Su licencia caduco. Comuniquese con su institucion.";"Su licencia caduco. Comuniquese con su institucion."

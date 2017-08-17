@@ -97,10 +97,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initSmtp() {
         Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp('smtp.gmail.com', array(
-            'ssl'=> 'tls',
+            'ssl' => 'tls',
             'port' => 587,
             'auth' => 'login',
-            'username' => 'reporte@error403.com.ar',
+             'username' => 'reporte@error403.com.ar',
             'password' => 'R3p0rt3s'
         )));
     }
@@ -178,7 +178,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
         $ctrl = $this->getResource('FrontController');
         $router = $ctrl->getRouter();
-
+        
 //FRONT
         // Agregamos este route para forzar a que aparezca el idioma 
         // y no se rompa cuando no viene
@@ -192,7 +192,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'controller' => 'index',
             'action' => 'index'
         )));
-
+        
         $idioma = APPLICATION_LANG;
 
         if (Zend_Locale::isLocale($idioma)) {

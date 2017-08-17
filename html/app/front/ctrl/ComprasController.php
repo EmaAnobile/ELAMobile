@@ -8,13 +8,15 @@ class ComprasController extends Zend_Controller_Action {
         $where = [];
         if ($usuario->getInstitucionId() != null) {
             $where = ['institucion_id = ?' => $usuario->getInstitucionId()];
+            $this->view->assign('ocultar_institucion', true);
         }
 
-        $this->view->assign("listado", Model_Compras::getSingleton()->fetchAll($where));
+        $this->view->assign("listado", Model_Compras::getSingleton()->getRows());
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
     public function carritoAction() {
+
         $carrito = $this->_getCarrito();
 
         // Obtengo las licencias
@@ -88,28 +90,18 @@ class ComprasController extends Zend_Controller_Action {
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
-//    public function quitarAction() {
-//        $carrito = $this->_getCarrito();
-//
-//        $id = $this->getRequest()->getParam('id');
-//
-//        Model_ComprasDetalles::getSingleton()
-//                ->delete([
-//                    'id = ?' => $id,
-//                    'compra_id = ?' => $carrito->getId()
-//        ]);
-//
-//        $this->getHelper('FlashMessenger')->addMessage('Detalle borrado');
-//        $url = $this->view->url(array('id' => null, 'action' => 'carrito'));
-//        $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
-//    }
-
     /**
      * 
      * @return Model_Row_Compra
      */
     private function _getCarrito() {
         $usuario = Zend_Registry::get('Usuario');
+
+        if (!$usuario->getInstitucionId()) {
+            $this->getHelper('FlashMessenger')->addMessage('danger|' . __('Usted no tiene permitido comprar'));
+            $url = $this->view->url(array('action' => 'index'));
+            $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+        }
 
         $where = [
             'borrador = 1',
@@ -126,6 +118,39 @@ class ComprasController extends Zend_Controller_Action {
         }
 
         return $carrito;
+    }
+
+    public function verAction() {
+        $id = $this->getRequest()->getParam("id");
+        $confirmando = false !== $this->getRequest()->getParam("confirmar", false);
+        $rechazando = false !== $this->getRequest()->getParam("rechazar", false);
+
+        $item = Model_Compras::getSingleton()->find($id)->current();
+
+        if ($this->getRequest()->isPost()) {
+            // Confirmar la compra y quitarla de borrador
+            $item->setFromArray(array(
+                'borrador' => 0,
+                'aprobado' => $confirmando
+            ))->save();
+            if ($confirmando) {
+                // Generar las licencias a la institucion
+            }
+
+            // Enviar aviso al usuario que realizo la compra sobre su aceptacion
+            if ($confirmando) {
+                // Mail satisfactorio
+            } else {
+                // Mail rechazatorio
+            }
+            $url = $this->view->url(array('action' => 'index', 'id' => null));
+            $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+        }
+
+        $this->view->assign("item", $item);
+        $this->view->assign("confirmando", $confirmando);
+        $this->view->assign("rechazando", $rechazando);
+        $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
 }

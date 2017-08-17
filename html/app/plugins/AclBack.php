@@ -47,8 +47,22 @@ class Plugin_AclBack extends Zend_Controller_Plugin_Abstract {
         //El patrón Singleton nos permite obtener la instancia de Usuarios
         //en caso de ya estar instanciada obtiene esa, en otro caso realiza una 
         //nueva instancia.
-        if ($usuario != null)
+        if ($usuario != null) {
             $usuario = Model_Usuarios::getSingleton()->find($usuario->id)->current();
+
+            if ($usuario->getNombreRol() == 'Paciente') {
+                $ahora = new Zend_Date();
+                $vigencia = new Zend_Date($usuario->getFechaVigencia());
+                if ($ahora->compare($vigencia) >= 0) {
+                    $auth->clearIdentity();
+                    $this->getRequest()
+                            ->setControllerName('usuarios')
+                            ->setActionName('acceder')
+                            ->setModuleName('default');
+                    return;
+                }
+            }
+        }
 
         switch ($mod) {
             case 'back':

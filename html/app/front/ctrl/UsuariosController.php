@@ -29,7 +29,8 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
 
             //Consulta a la BD con el usuario y pass que se logeo.
             //Se utiliza un adapter que es el que espera el $Auth
-            $adapter = new Zend_Auth_Adapter_DbTable($db, (string) new Model_Usuarios(), 'usuario', 'password', '?');
+            $dbUsuario = new Model_Usuarios();
+            $adapter = new Zend_Auth_Adapter_DbTable($db, (string) $dbUsuario, 'usuario', 'password', '?');
             $adapter->setIdentity($usuario)->setCredential($password);
             $result = $auth->authenticate($adapter);
             $error = '';
@@ -37,11 +38,29 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
                 case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND:
                 case Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID:
                     $error = 'Usuario o password incorrecto';
+
                     break;
 
                 case Zend_Auth_Result::SUCCESS:
-
                     $session = new Zend_Session_Namespace('backend');
+
+                    // Validar vigencia
+                    $usu = $adapter->getResultRowObject();
+                    $usuario = $dbUsuario->fetchRow(array(
+                        'id = ?' => $usu->id
+                    ));
+                    if ($usuario->getNombreRol() == 'Paciente') {
+                        $ahora = new Zend_Date();
+                        $vigencia = new Zend_Date($usuario->getFechaVigencia());
+                        if ($ahora->compare($vigencia) !== -1) {
+                            $auth->clearIdentity();
+
+                            $this->getHelper('FlashMessenger')->addMessage('danger|' . __('Su licencia caduco. Comuniquese con su institucion.'));
+                            $this->getHelper('redirector')
+                                    ->gotoUrlAndExit($this->view->serverUrl($this->view->url()));
+                            return;
+                        }
+                    }
 
                     //Variable que se declara para luego tener los datos
                     // de los usuarios y no tener que volver a consultar
@@ -51,10 +70,10 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
                     $url = $this->view->url(array(), 'default', true);
                     /*
                       if ($session->usuario->rol === 'admin') {
-
                       $url = $this->view->url(array(), 'administracion');
                       }
                      */
+
                     $this->getHelper('redirector')
                             ->gotoUrlAndExit($this->view->serverUrl($url));
                     return;
@@ -77,6 +96,7 @@ class UsuariosController extends Zend_Controller_Action implements Interface_ICa
     }
 
     public function confirmarAction() {
+
         $this->view->headTitle('Confirmar nueva contraseña');
 
         if ($this->getRequest()->isPost()) {
@@ -204,7 +224,9 @@ EMAIL
                 $datos = $this->getRequest()->getPost();
 
                 $datosUsuario = array(
-                    'usuario' => $datos['usuario']
+                    'usuario' => $datos['usuario'],
+                    'password' => $datos['password'],
+                    'email' => $datos['email']
                 );
                 if (isset($datos['rol_id']))
                     $datosUsuario['rol_id'] = $datos['rol_id'];
@@ -283,7 +305,35 @@ EMAIL
     }
 
     public function bajaAction() {
-        $this->getHelper('FlashMessenger')->addMessage('danger|No es posible dar de baja usuarios');
+
+        // Obtengo el usuario actual
+        $usuario = Zend_Registry::get('Usuario');
+
+        $id = $this->getRequest()->getParam("id");
+
+        //Obtenemos los datos del user
+        $User = Model_Usuarios::getSingleton()->find($id)->current();
+
+        //Obtenemos todos los roles que tienen este usuario
+        $rol = Model_Roles::getSingleton()->find($User->getRol_id())->current();
+
+        try {
+            if ($rol->getsistema() == 1) {
+                throw new Exception('El usuario es de sistema y no puede ser borrado');
+            }
+
+            Model_UsuariosTableros::getSingleton()->delete(array(
+                'usuario_id = ?' => $id));
+
+            Model_Usuarios::getSingleton()->delete(array(
+                'id = ?' => $id));
+
+            $this->getHelper('FlashMessenger')->addMessage('Usuario borrado correctamente');
+        } catch (Exception $ex) {
+            $this->getHelper('FlashMessenger')->addMessage('danger|' . $ex->getMessage());
+        }
+
+        // $this->getHelper('FlashMessenger')->addMessage('danger|' . $ex->getMessage());
         $url = $this->view->url(array('id' => null, 'action' => 'index'));
         $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
     }
