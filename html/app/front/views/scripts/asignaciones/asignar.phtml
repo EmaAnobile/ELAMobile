@@ -1,0 +1,38 @@
+<form method="Post" id="formulario">
+    <div class="form-group">
+        <label><?php echo __('Tipo de licencia') ?></label>
+        <select name="tipo_licencia" class="form-control" id="tipo-licencia">
+            <?php foreach ($this->TiposLicencias as $tipo) : ?>
+                <option value="<?php echo $tipo['id'] ?>" data-cantidad="<?php echo $tipo['cantidad'] ?>">
+                    <?php echo sprintf('%s (%s)', $tipo['tipo_licencia']->getNombre(), $tipo['cantidad']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <select name="usuarios[]" style="height: 150px;" multiple id="usuarios" >
+            <?php if (count($this->usuarios_sin) > 0) : ?>
+                <optgroup label="<?php echo __('Sin licencia asignada') ?>">
+                    <?php foreach ($this->usuarios_sin as $usuario) : ?>
+                        <option value="<?php echo $usuario->getId() ?>">
+                            <?php echo $usuario->getUsuario() ?>
+                        </option>
+                    <?php endforeach; ?>
+                </optgroup>
+            <?php endif; ?>
+            <?php if (count($this->usuarios_con) > 0) : ?>
+                <optgroup label="<?php echo __('Con licencia asignada') ?>">
+                    <?php foreach ($this->usuarios_con as $usuario) : ?>
+                        <option value="<?php echo $usuario->getId() ?>">
+                            <?php echo $usuario->getUsuario() ?>
+                            <?php echo sprintf('(%s - %s)', $usuario->getTipoLicencia()->getNombre(), $usuario->getFechaVigencia()); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </optgroup>
+            <?php endif; ?>
+        </select>
+    </div>
+    <input type="submit" id="boton-guardar" value="<?php echo __('Guardar') ?>"/>
+</form>
+
+<script src="<?php echo $this->baseUrl() . '/js/asignaciones.js' ?>" defer></script>

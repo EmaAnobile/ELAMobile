@@ -100,14 +100,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'ssl' => 'tls',
             'port' => 587,
             'auth' => 'login',
-             'username' => 'reporte@error403.com.ar',
+            'username' => 'reporte@error403.com.ar',
             'password' => 'R3p0rt3s'
         )));
     }
 
     protected function _initAcl() {
         $acl = new Zend_Acl();
-
         /*
          * GRUPO      = ROLES
          * FORMULARIO = RECURSOS
@@ -119,6 +118,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $acl->add(new Zend_Acl_Resource('tablero'));
         $acl->add(new Zend_Acl_Resource('usuarios'));
         $acl->add(new Zend_Acl_Resource('instituciones'));
+        $acl->add(new Zend_Acl_Resource('asignaciones'));
         $acl->add(new Zend_Acl_Resource('licencias'));
         $acl->add(new Zend_Acl_Resource('perfiles'));
         $acl->add(new Zend_Acl_Resource('roles'));
@@ -178,7 +178,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
         $ctrl = $this->getResource('FrontController');
         $router = $ctrl->getRouter();
-        
+
 //FRONT
         // Agregamos este route para forzar a que aparezca el idioma 
         // y no se rompa cuando no viene
@@ -192,7 +192,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'controller' => 'index',
             'action' => 'index'
         )));
-        
+
         $idioma = APPLICATION_LANG;
 
         if (Zend_Locale::isLocale($idioma)) {
@@ -257,6 +257,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     static function logVar($var) {
         self::log(var_export($var, true), Zend_Log::WARN, '-vars');
+    }
+
+    public static function getLapsoVigencia() {
+        return 6;
     }
 
 }

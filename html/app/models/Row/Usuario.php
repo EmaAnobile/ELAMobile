@@ -40,4 +40,14 @@ class Model_Row_Usuario extends Model_Row_Abstract {
         return md5($this->getUsuario() . '-' . $this->getPassword());
     }
 
+    public function getTipoLicencia() {
+        return $this->findParentRow('Model_TiposLicencias');
+    }
+
+    public function getFechaVigencia() {
+        $fecha = new Zend_Date($this->fecha_vigencia);
+
+        return $fecha->toString(Zend_Date::DATE_LONG);
+    }
+
 }

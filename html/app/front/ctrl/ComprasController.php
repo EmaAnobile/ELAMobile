@@ -79,9 +79,13 @@ class ComprasController extends Zend_Controller_Action {
                     );
                 }
             }
-
+            $continuar = $this->getRequest()->getPost('continuar', false);
             $this->getHelper('FlashMessenger')->addMessage('Carrito actualizado');
             $url = $this->view->url(array('id' => null, 'action' => 'carrito'));
+            if ($continuar !== false) {
+                $url = $this->view->url(array('action' => 'pagar'));
+            }
+
             $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
         }
 
@@ -121,20 +125,51 @@ class ComprasController extends Zend_Controller_Action {
     }
 
     public function verAction() {
+        $usuario = Zend_Registry::get('Usuario');
+        $puedeConfirmar = $usuario->getInstitucionId() <= 0;
+
         $id = $this->getRequest()->getParam("id");
         $confirmando = false !== $this->getRequest()->getParam("confirmar", false);
         $rechazando = false !== $this->getRequest()->getParam("rechazar", false);
-
+        /* @var $item Model_Row_Compra */
         $item = Model_Compras::getSingleton()->find($id)->current();
 
-        if ($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost() && $puedeConfirmar) {
+            // Si es borrador generamos las licencias.
+            if ($item->getBorrador() == 0) {
+                $this->getHelper('FlashMessenger')->addMessage('danger|' . __('La compra ya fue revisada'));
+
+                $url = $this->view->url(array('action' => 'index', 'id' => null));
+                $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+
+                return;
+            }
             // Confirmar la compra y quitarla de borrador
             $item->setFromArray(array(
                 'borrador' => 0,
                 'aprobado' => $confirmando
             ))->save();
             if ($confirmando) {
+
+                $db_licencias = new Model_InstitucionesLicencias();
+
                 // Generar las licencias a la institucion
+                foreach ($item->getDetalles() as $detalle) {
+
+                    for ($i = 0; $i < $detalle->getCantidad(); $i++) {
+                        $licencia = array(
+                            'institucion_id' => $item->getInstitucionId(),
+                            'tipo_licencia_id' => $detalle->getTipoLicId(),
+                            'hash' => trim(com_create_guid(), '{}'),
+                            'compra_id' => $item->getId()
+                        );
+
+//                        var_dump($licencia);
+//                        die();
+
+                        $db_licencias->createRow($licencia)->save();
+                    }
+                }
             }
 
             // Enviar aviso al usuario que realizo la compra sobre su aceptacion
@@ -148,9 +183,49 @@ class ComprasController extends Zend_Controller_Action {
         }
 
         $this->view->assign("item", $item);
+        $this->view->assign("puedeConfirmar", $puedeConfirmar);
         $this->view->assign("confirmando", $confirmando);
         $this->view->assign("rechazando", $rechazando);
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
+    }
+
+    public function pagarAction() {
+        require_once 'MercadoPago/mercadopago.php';
+        $cfg = Zend_Registry::get('Zend_Config');
+        $mp = new MP($cfg['mp']['client_id'], $cfg['mp']['client_secret']);
+
+        $carrito = $this->_getCarrito();
+
+        $items = array();
+        foreach ($carrito->getDetalles() as $detalle) {
+            if ($detalle->getCantidad() == 0)
+                continue;
+
+            $items[] = array(
+                "title" => $detalle->getTipoLicencia()->getNombre(),
+                "quantity" => $detalle->getCantidad(),
+                "currency_id" => "ARS",
+                "unit_price" => (float) $detalle->getTipoLicencia()->getPrecio()
+            );
+        }
+        $preference_data = array(
+            "items" => $items,
+            'back_urls' => array(
+                'success' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion'))),
+                'pending' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion'))),
+                'failure' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion'))),
+            ),
+            'notification_url' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion')))
+        );
+        $preference = $mp->create_preference($preference_data);
+        $carrito->setFromArray(array(
+            'mp_id' => $preference['response']['id'],
+            'borrador' => 0
+        ))->save();
+
+        $url = $preference['response']['sandbox_init_point'];
+        header('location:' . $url);
+        die();
     }
 
 }

@@ -17,6 +17,10 @@ class Model_Row_CompraDetalle extends Model_Row_Abstract {
         return $this->getTipoLicencia()->getPrecio() * $this->getCantidad();
     }
 
+    /**
+     * 
+     * @return Model_Row_TipoLicencia
+     */
     public function getTipoLicencia() {
         if ($this->_tipo_licencia === null) {
             $this->_tipo_licencia = $this->findParentRow('Model_TiposLicencias');

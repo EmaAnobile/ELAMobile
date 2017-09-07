@@ -15,11 +15,14 @@ $carrito = $this->carrito;
                 <td><?php echo $licencia->getNombre() ?></td>
                 <td><?php echo $licencia->getPrecio() ?></td>
                 <td><input type="number" name="detalle[<?php echo $licencia->getId() ?>]" value="<?php echo $carrito->getCantidadLicencia($licencia) ?>" /></td>
-                <td><?php echo $carrito->getPrecioLicencia($licencia) ?></td>
+                <td><?php echo $this->currency($carrito->getPrecioLicencia($licencia)) ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
     <button type="submit" class="btn btn-default">
         <?php echo __('Guardar') ?>
+    </button>
+    <button type="submit" name="continuar" class="btn btn-default">
+        <?php echo __('Pagar') ?>
     </button>
 </form>

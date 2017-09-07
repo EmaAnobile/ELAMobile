@@ -6,6 +6,7 @@
 class Model_Row_Compra extends Model_Row_Abstract {
 
     private $_detalles = null;
+    private $_licencias = null;
 
     public function getPrecio() {
         $precio = 0;
@@ -28,6 +29,20 @@ class Model_Row_Compra extends Model_Row_Abstract {
         }
 
         return $this->_detalles;
+    }
+    
+    /**
+     * 
+     * @return Model_Row_CompraDetalle[]
+     */
+    function getLicenciasGen() {
+        if ($this->getId() == null)
+            return array();
+        if ($this->_licencias === null) {
+            $this->_licencias = $this->findDependentRowset('Model_InstitucionesLicencias');
+        }
+
+        return $this->_licencias;
     }
     
     public function getCantidadLicencia($licencia) {

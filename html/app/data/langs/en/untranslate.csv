@@ -83,3 +83,35 @@ NULL;NULL
 ElaMobile;ElaMobile
 ver;ver
 "Su licencia caduco. Comuniquese con su institucion.";"Su licencia caduco. Comuniquese con su institucion."
+asignaciones;asignaciones
+asignar;asignar
+"Nueva Asignacion";"Nueva Asignacion"
+"Tipo de licencia";"Tipo de licencia"
+Codigo;Codigo
+Vigencia;Vigencia
+"Asignar Licencia";"Asignar Licencia"
+"Sin licencia asignada";"Sin licencia asignada"
+"Con licencia asignada";"Con licencia asignada"
+"Asignacion correcta";"Asignacion correcta"
+"No hay disponible la cantidad requerida para el tipo de licencia seleccionado";"No hay disponible la cantidad requerida para el tipo de licencia seleccionado"
+"Password de usuario";"Password de usuario"
+"Email de usuario";"Email de usuario"
+Aprobada;Aprobada
+No;No
+Ver;Ver
+"Es borrador";"Es borrador"
+"Esta aprobada";"Esta aprobada"
+Total;Total
+Cantidad;Cantidad
+Subtotal;Subtotal
+"No asignada";"No asignada"
+"No asignada";"No asignada"
+Licencia;Licencia
+Confirmar;Confirmar
+Rechazar;Rechazar
+"Esta a punto de confirmar la compra.";"Esta a punto de confirmar la compra."
+"Este proceso le otorgara a la empresa solicitante, las licencias detalladas abajo.";"Este proceso le otorgara a la empresa solicitante, las licencias detalladas abajo."
+"Esta seguro de continuar?";"Esta seguro de continuar?"
+pagar;pagar
+Pagar;Pagar
+notificacion;notificacion

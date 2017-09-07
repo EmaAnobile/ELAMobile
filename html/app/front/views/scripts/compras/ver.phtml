@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <?php if ($this->confirmando) : ?>
+    <?php if ($this->confirmando && $this->puedeConfirmar) : ?>
         <div class="mensaje-confirmacion">
             <p class="bg-info">
                 <?php echo __('Esta a punto de confirmar la compra.') ?>
@@ -15,7 +15,7 @@
         </div>
     <?php endif; ?>
 
-    <?php if ($this->rechazando) : ?>
+    <?php if ($this->rechazando && $this->puedeConfirmar) : ?>
         <div class="mensaje-confirmacion">
             <p class="bg-info">
                 <?php echo __('Esta a punto de rechazar la compra.') ?>
@@ -52,14 +52,37 @@
         <?php foreach ($this->item->getDetalles() as /* @var $detalle Model_Row_CompraDetalle */ $detalle) : ?>
             <tr>
                 <td><?php echo $detalle->getTipoLicencia()->getNombre() ?></td>
-                <td><?php echo $detalle->getPrecio() ?></td>
+                <td><?php echo $this->currency($detalle->getPrecio()) ?></td>
                 <td><?php echo $detalle->getCantidad() ?></td>
-                <td><?php echo $detalle->getPrecioFinal() ?></td>
+                <td><?php echo $this->currency($detalle->getPrecioFinal()) ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
 
-    <?php if ($this->confirmando == false && $this->rechazando == false && $this->item->getBorrador() == 1) : ?>
+    <?php if (sizeof($this->item->getLicenciasGen())) : ?>
+        <table class="table table-bordered">
+            <tr>
+                <th><?php echo __('Tipo de licencia') ?></th>
+                <th><?php echo __('Codigo') ?></th>
+                <th><?php echo __('Vigencia') ?></th>
+                <th><?php echo __('Usuario') ?></th>
+            </tr>
+            <?php foreach ($this->item->getLicenciasGen() as /* @var $Licencia Model_Row_InstitucionLicencia */ $Licencia) : ?>
+                <tr>
+                    <td><?php echo $Licencia->getTipoLicencia()->getNombre() ?></td>
+                    <td><?php echo $Licencia->getHashOculto() ?></td>
+                    <?php if ($Licencia->getUsuario() == null) : ?>
+                        <td colspan="2"><center><?php echo __('No asignada') ?></center></td>
+                <?php else: ?>
+                    <td><?php echo $Licencia->getFechaVigencia() ?></td>
+                    <td><?php echo $Licencia->getUsuario()->getUsuario() ?></td>
+                <?php endif; ?>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+
+    <?php if ($this->confirmando == false && $this->rechazando == false && $this->item->getBorrador() == 1 && $this->puedeConfirmar) : ?>
         <a href="?confirmar" class="btn btn-success btn-theme">
             <?php echo __('Confirmar') ?>
         </a>

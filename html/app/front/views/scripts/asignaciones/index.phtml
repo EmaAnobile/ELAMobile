@@ -1,0 +1,21 @@
+<a href="<?php echo $this->url(array('action' => 'asignar')) ?>" class="btn btn-primary"><?php echo __('Nueva Asignacion') ?></a>
+<table class="table table-bordered">
+    <tr>
+        <th><?php echo __('Tipo de licencia') ?></th>
+        <th><?php echo __('Codigo') ?></th>
+        <th><?php echo __('Vigencia') ?></th>
+        <th><?php echo __('Usuario') ?></th>
+    </tr>
+    <?php foreach ($this->Licencias as /* @var $Licencia Model_Row_InstitucionLicencia */ $Licencia) : ?>
+        <tr>
+            <td><?php echo $Licencia->getTipoLicencia()->getNombre() ?></td>
+            <td><?php echo $Licencia->getHashOculto() ?></td>
+            <?php if ($Licencia->getUsuario() == null) : ?>
+                <td colspan="2"><center><?php echo __('No asignada') ?></center></td>
+    <?php else: ?>
+        <td><?php echo $Licencia->getFechaVigencia() ?></td>
+        <td><?php echo $Licencia->getUsuario()->getUsuario() ?></td>
+    <?php endif; ?>
+    </tr>
+<?php endforeach; ?>
+</table>
