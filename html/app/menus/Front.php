@@ -149,6 +149,15 @@ class Menu_Front extends Zend_Navigation {
                 )
             ),
             array(
+                'label' => 'Carrito',
+                'reset_params' => true,
+                'route' => 'default',
+                'resource' => 'compras',
+                'privilege' => 'alta',
+                'controller' => 'carrito',
+                'action' => 'index',
+            ),
+            array(
                 'label' => 'Compras',
                 'reset_params' => true,
                 'route' => 'default',
@@ -157,15 +166,6 @@ class Menu_Front extends Zend_Navigation {
                 'controller' => 'compras',
                 'action' => 'index',
                 'pages' => array(
-                    array(
-                        'visible' => false,
-                        'reset_params' => true,
-                        'route' => 'default',
-                        'resource' => 'compras',
-                        'privilege' => 'carrito',
-                        'controller' => 'compras',
-                        'action' => 'carrito',
-                    ),
                     array(
                         'visible' => false,
                         'reset_params' => true,

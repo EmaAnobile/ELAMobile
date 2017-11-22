@@ -1,0 +1,51 @@
+<?php
+$compra = $this->compra;
+?>
+<center><h2><?php echo __('Gracias por su compra') ?></h2></center>
+<div class="container-fluid">
+    <dl>
+        <dt><?php echo __('Fecha') ?></dt>
+        <dd><?php echo $compra->getFecha(); ?></dd>
+        <dt><?php echo __('Total') ?></dt>
+        <dd><?php echo $this->currency($compra->getPrecio()) ?></dd>
+    </dl>
+    <table class="table table-bordered">
+        <tr>
+            <th><?php echo __('Tipo de licencia') ?></th>
+            <th><?php echo __('Precio') ?></th>
+            <th><?php echo __('Cantidad') ?></th>
+            <th><?php echo __('Subtotal') ?></th>
+        </tr>
+        <?php foreach ($compra->getDetalles() as /* @var $detalle Model_Row_CompraDetalle */ $detalle) : ?>
+            <tr>
+                <td><?php echo $detalle->getTipoLicencia()->getNombre() ?></td>
+                <td><?php echo $this->currency($detalle->getPrecio()) ?></td>
+                <td><?php echo $detalle->getCantidad() ?></td>
+                <td><?php echo $this->currency($detalle->getPrecioFinal()) ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+
+    <?php if (sizeof($compra->getLicenciasGen())) : ?>
+        <table class="table table-bordered">
+            <tr>
+                <th><?php echo __('Tipo de licencia') ?></th>
+                <th><?php echo __('Codigo') ?></th>
+                <th><?php echo __('Vigencia') ?></th>
+                <th><?php echo __('Usuario') ?></th>
+            </tr>
+            <?php foreach ($compra->getLicenciasGen() as /* @var $Licencia Model_Row_InstitucionLicencia */ $Licencia) : ?>
+                <tr>
+                    <td><?php echo $Licencia->getTipoLicencia()->getNombre() ?></td>
+                    <td><?php echo $Licencia->getHashOculto() ?></td>
+                    <?php if ($Licencia->getUsuario() == null) : ?>
+                        <td colspan="2"><center><?php echo __('No asignada') ?></center></td>
+                <?php else: ?>
+                    <td><?php echo $Licencia->getFechaVigencia() ?></td>
+                    <td><?php echo $Licencia->getUsuario()->getUsuario() ?></td>
+                <?php endif; ?>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+</div>            

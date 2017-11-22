@@ -7,7 +7,7 @@ class AsignacionesController extends Zend_Controller_Action {
 
         if (!$usuario->getInstitucionId()) {
             $this->getHelper('FlashMessenger')->addMessage('danger|' . __('Usted no tiene permitido Asignar'));
-            $url = $this->view->url(array('action' => 'index'));
+            $url = $this->view->url(array('action' => 'index', 'controller' => 'index'));
             $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
 
             return;
@@ -53,7 +53,7 @@ class AsignacionesController extends Zend_Controller_Action {
                         'usuario_id' => $idUsuario,
                         'fecha_vigencia' => $fechaVigencia->toString(Zend_Date::ISO_8601),
                     ))->save();
-                    
+
                     $datos = array(
                         'fecha_vigencia' => $fechaVigencia->toString(Zend_Date::ISO_8601),
                         'tipo_licencia_id' => $licencia->getTipoLicenciaId()

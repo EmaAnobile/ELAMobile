@@ -24,24 +24,20 @@ class Plugin_AclBack extends Zend_Controller_Plugin_Abstract {
         $auth->setStorage(new Zend_Auth_Storage_Session('backend'));
         $session = new Zend_Session_Namespace('backend');
 
-        if ($mod === 'back') {
-            $front = Zend_Controller_Front::getInstance();
+        $front = Zend_Controller_Front::getInstance();
 
-            // Todos los controllers del modulo back requieren de un usuario logueado
-            $protegido = ($ctrl != 'error') ? true : false;
-            if ($auth->hasIdentity() == false && $protegido) {
-                $this->getRequest()
-                        ->setControllerName('usuarios')
-                        ->setActionName('acceder')
-                        ->setModuleName('default');
-                return;
-            } elseif ($auth->hasIdentity()) {
-                $usuario = $session->usuario;
-            }
-        } else {
-            if ($auth->hasIdentity()) {
-                $usuario = $session->usuario;
-            }
+        // Todos los controllers del modulo back requieren de un usuario logueado
+        $protegido = ($ctrl != 'error') ? true : false;
+        $protegido = ($ctrl == 'compras' && $act == 'notificacion') ? false : $protegido;
+        $protegido = ($mod == 'api') ? false : $protegido;
+        if ($auth->hasIdentity() == false && $protegido) {
+            $this->getRequest()
+                    ->setControllerName('usuarios')
+                    ->setActionName('acceder')
+                    ->setModuleName('default');
+            return;
+        } elseif ($auth->hasIdentity()) {
+            $usuario = $session->usuario;
         }
 
         //El patrón Singleton nos permite obtener la instancia de Usuarios
@@ -64,48 +60,33 @@ class Plugin_AclBack extends Zend_Controller_Plugin_Abstract {
             }
         }
 
-        switch ($mod) {
-            case 'back':
-                $navigation = new Menu_Front();
-                $activeControllers = $navigation->findAllBy('controller', $ctrl);
-                $activo = null;
-                foreach ($activeControllers as $activeController) {
-                    if ($activeController->getAction() == $act) {
-                        $activo = $activeController;
-//                        $activeController->active = true;
-                    }
-                }
-
-                $res = 'back';
-                $priv = 'ver';
-                $role = ($usuario !== null) ? $usuario->getNombreRol() : 'invitado';
-                if ($activo !== null) {
-                    $res = $activo->getResource();
-                    $priv = $activo->getPrivilege();
-                }
-
-                if (($auth->hasIdentity() && !Zend_Registry::get('Zend_Acl')->isAllowed($role, $res, $priv))) {
-                    //throw new Zend_Acl_Exception(Zend_Acl::TYPE_DENY);
-                    $this->getRequest()
-                            ->setControllerName('index')
-                            ->setActionName('index')
-                            ->setModuleName('default');
-                }
-
-                break;
-            default:
-
-                $navigation = new Menu_Front();
-                $activeControllers = $navigation->findAllBy('controller', $ctrl);
-                foreach ($activeControllers as $activeController) {
-                    if ($activeController->getAction() == $act) {
-//                        $activeController->active = true;
-                    }
-                }
-
-                break;
+        $navigation = new Menu_Front();
+        $activeControllers = $navigation->findAllBy('controller', $ctrl);
+        $activo = null;
+        foreach ($activeControllers as $activeController) {
+            if ($activeController->getAction() == $act) {
+                $activo = $activeController;
+                //                        $activeController->active = true;
+            }
         }
+        /*
+          $res = 'back';
+          $priv = 'ver';
+          $role = ($usuario !== null) ? $usuario->getNombreRol() : 'invitado';
+          if ($activo !== null) {
+          $res = $activo->getResource();
+          $priv = $activo->getPrivilege();
+          }
 
+          if (($auth->hasIdentity() && !Zend_Registry::get('Zend_Acl')->isAllowed($role, $res, $priv))) {
+          //throw new Zend_Acl_Exception(Zend_Acl::TYPE_DENY);
+          $this->getRequest()
+          ->setControllerName('index')
+          ->setActionName('index')
+          ->setModuleName('default');
+          return;
+          }
+         */
         //Setea el usuario logeado en el propio Framework para recuperarlo
         // en otras instancias para realizar validaciones que sean necesarias.
         Zend_Registry::set('Usuario', $usuario);

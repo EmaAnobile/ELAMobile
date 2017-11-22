@@ -9,6 +9,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     static protected $_writer = null;
 
     const MAX_LOG_SIZE = 1310720;
+    // 
+    // Constantes de error
+    //
+    const ERROR_LICENCIA_CADUCADA = 1;
+    const ERROR_NO_CAPTURADO = 2;
+    // 
+    // Constantes de informacion
+    //
+    const INFO_AUTENTICADO = 1;
+    const INFO_EMAIL_ENVIADO = 2;
 
     protected function _initAutoload() {
         $autoloader = new Zend_Application_Module_Autoloader(array(
@@ -16,8 +26,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'basePath' => APPLICATION_PATH . '/front',
         ));
         $autoloader = new Zend_Application_Module_Autoloader(array(
-            'namespace' => 'Back_',
-            'basePath' => APPLICATION_PATH . '/back',
+            'namespace' => 'Api_',
+            'basePath' => APPLICATION_PATH . '/api',
         ));
         $autoloader = new Zend_Application_Module_Autoloader(array(
             'namespace' => '',
@@ -41,6 +51,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
                 'namespace' => 'Service',
                 'path' => 'services',
         )));
+
+        $autoloader->addResourceTypes(array(
+            'metodos_pago' => array(
+                'namespace' => 'MetodoPago',
+                'path' => 'metodos_pago',
+        )));
     }
 
     protected function _initActionHelpers() {
@@ -54,7 +70,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $ctrl->setParam('disableOutputBuffering', true);
         $ctrl->setControllerDirectory(array(
             'default' => APPLICATION_PATH . '/front/ctrl',
-            'back' => APPLICATION_PATH . '/back/ctrl',
+            'api' => APPLICATION_PATH . '/api/controllers',
         ));
 
         $ctrl->registerPlugin(new Zend_Controller_Plugin_ErrorHandler(array(
@@ -192,6 +208,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'controller' => 'index',
             'action' => 'index'
         )));
+        $router->addRoute('api', new Zend_Controller_Router_Route(
+                'api/:@controller/:@action/*', array(
+            'controller' => 'index',
+            'module' => 'api',
+            'action' => 'index'
+        )));
 
         $idioma = APPLICATION_LANG;
 
@@ -237,8 +259,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     static function log($msj, $prioridad = Zend_Log::WARN, $prefix = '') {
         $_logger = self::getLogger($prefix);
         $_logger->log($msj, $prioridad);
-
-        self::mail($msj, $prioridad);
     }
 
     static function getLogger($prefix = '') {

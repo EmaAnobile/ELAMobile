@@ -1,8 +1,10 @@
 <?php
 
-class ComprasController extends Zend_Controller_Action {
+class ComprasController extends Zend_Controller_Action
+{
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $usuario = Zend_Registry::get('Usuario');
 
         $where = [];
@@ -15,116 +17,8 @@ class ComprasController extends Zend_Controller_Action {
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
-    public function carritoAction() {
-
-        $carrito = $this->_getCarrito();
-
-        // Obtengo las licencias
-        $licencias = Model_TiposLicencias::getSingleton()->fetchAll(null, 'precio');
-
-        if ($this->getRequest()->isPost()) {
-
-            if ($carrito->getId() <= 0)
-                $carrito->save();
-
-            $detalle = $this->getRequest()->getPost('detalle');
-            $licencia = null;
-            foreach ($detalle as $id_licencia => $cantidad_ingresada) {
-                // Si ingreso 0, borro el detalle
-                if ($cantidad_ingresada == 0) {
-                    Model_ComprasDetalles::getSingleton()
-                            ->delete(
-                                    // WHERE
-                                    [
-                                        'compra_id = ?' => $carrito->getId(),
-                                        'tipo_lic_id = ?' => $id_licencia,
-                                    ]
-                    );
-                    continue; // foreach de detalle continue
-                }
-
-                foreach ($licencias as $licencia_foreach) {
-                    if ($licencia_foreach->getId() == $id_licencia) {
-                        $licencia = $licencia_foreach;
-                        break; // Corte del foreach
-                    }
-                }
-                try {
-                    // Intento insertar la fila
-                    Model_ComprasDetalles::getSingleton()
-                            ->insert(
-                                    // DATOS
-                                    [
-                                        'cantidad' => $cantidad_ingresada,
-                                        'compra_id' => $carrito->getId(),
-                                        'tipo_lic_id' => $id_licencia,
-                                        'precio' => $licencia->getPrecio()
-                                    ]
-                    );
-                } catch (Exception $ex) {
-                    // Si la clave unica (compra_id, tipo_lic_id) ya existe
-                    // actualizo los dato
-                    Model_ComprasDetalles::getSingleton()
-                            ->update(
-                                    // Datos
-                                    [
-                                'cantidad' => $cantidad_ingresada,
-                                'precio' => $licencia->getPrecio()
-                                    ],
-                                    // WHERE
-                                    [
-                                'compra_id = ?' => $carrito->getId(),
-                                'tipo_lic_id = ?' => $id_licencia,
-                                    ]
-                    );
-                }
-            }
-            $continuar = $this->getRequest()->getPost('continuar', false);
-            $this->getHelper('FlashMessenger')->addMessage('Carrito actualizado');
-            $url = $this->view->url(array('id' => null, 'action' => 'carrito'));
-            if ($continuar !== false) {
-                $url = $this->view->url(array('action' => 'pagar'));
-            }
-
-            $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
-        }
-
-        $this->view->assign("carrito", $carrito);
-        $this->view->assign("licencias", $licencias);
-        $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
-    }
-
-    /**
-     * 
-     * @return Model_Row_Compra
-     */
-    private function _getCarrito() {
-        $usuario = Zend_Registry::get('Usuario');
-
-        if (!$usuario->getInstitucionId()) {
-            $this->getHelper('FlashMessenger')->addMessage('danger|' . __('Usted no tiene permitido comprar'));
-            $url = $this->view->url(array('action' => 'index'));
-            $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
-        }
-
-        $where = [
-            'borrador = 1',
-            'institucion_id = ?' => $usuario->getInstitucionId()
-        ];
-
-        $carrito = Model_Compras::getSingleton()->fetchRow($where);
-
-        if ($carrito == null) {
-            $carrito = Model_Compras::getSingleton()->createRow([
-                'institucion_id' => $usuario->getInstitucionId(),
-                'usuario_id' => $usuario->getId()
-            ]);
-        }
-
-        return $carrito;
-    }
-
-    public function verAction() {
+    public function verAction()
+    {
         $usuario = Zend_Registry::get('Usuario');
         $puedeConfirmar = $usuario->getInstitucionId() <= 0;
 
@@ -144,32 +38,18 @@ class ComprasController extends Zend_Controller_Action {
 
                 return;
             }
+
+            // Indica si estaba o no aprobado antes de confirmar
+            $yaEstaba = $item->getAprobado() == 1;
             // Confirmar la compra y quitarla de borrador
             $item->setFromArray(array(
                 'borrador' => 0,
                 'aprobado' => $confirmando
             ))->save();
-            if ($confirmando) {
 
+            if ($confirmando && $yaEstaba == false) {
                 $db_licencias = new Model_InstitucionesLicencias();
-
-                // Generar las licencias a la institucion
-                foreach ($item->getDetalles() as $detalle) {
-
-                    for ($i = 0; $i < $detalle->getCantidad(); $i++) {
-                        $licencia = array(
-                            'institucion_id' => $item->getInstitucionId(),
-                            'tipo_licencia_id' => $detalle->getTipoLicId(),
-                            'hash' => trim(com_create_guid(), '{}'),
-                            'compra_id' => $item->getId()
-                        );
-
-//                        var_dump($licencia);
-//                        die();
-
-                        $db_licencias->createRow($licencia)->save();
-                    }
-                }
+                $db_licencias->generarLicencias($item);
             }
 
             // Enviar aviso al usuario que realizo la compra sobre su aceptacion
@@ -189,43 +69,145 @@ class ComprasController extends Zend_Controller_Action {
         $this->view->assign('mensajes', $this->getHelper('FlashMessenger')->getMessages());
     }
 
-    public function pagarAction() {
-        require_once 'MercadoPago/mercadopago.php';
-        $cfg = Zend_Registry::get('Zend_Config');
-        $mp = new MP($cfg['mp']['client_id'], $cfg['mp']['client_secret']);
+    public function exitoAction()
+    {
+        $compra_id = $this->getRequest()->getParam('compra_id');
 
-        $carrito = $this->_getCarrito();
+        /* @var $compra Model_Row_Compra */
+        $compra = Model_Compras::getSingleton()
+            ->find($compra_id)
+            ->current();
 
-        $items = array();
-        foreach ($carrito->getDetalles() as $detalle) {
-            if ($detalle->getCantidad() == 0)
-                continue;
-
-            $items[] = array(
-                "title" => $detalle->getTipoLicencia()->getNombre(),
-                "quantity" => $detalle->getCantidad(),
-                "currency_id" => "ARS",
-                "unit_price" => (float) $detalle->getTipoLicencia()->getPrecio()
-            );
-        }
-        $preference_data = array(
-            "items" => $items,
-            'back_urls' => array(
-                'success' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion'))),
-                'pending' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion'))),
-                'failure' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion'))),
-            ),
-            'notification_url' => $this->view->serverUrl($this->view->url(array('action' => 'notificacion')))
-        );
-        $preference = $mp->create_preference($preference_data);
-        $carrito->setFromArray(array(
-            'mp_id' => $preference['response']['id'],
-            'borrador' => 0
-        ))->save();
-
-        $url = $preference['response']['sandbox_init_point'];
-        header('location:' . $url);
-        die();
+        $this->view->assign('compra', $compra);
     }
 
+    public function errorAction()
+    {
+        
+    }
+
+    public function notificacionAction()
+    {
+        Zend_Layout::getMvcInstance()->disableLayout();
+        Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')->setNoRender(true);
+
+        $compra_id = $this->getRequest()->getParam('compra_id');
+
+        /* @var $compra Model_Row_Compra */
+        $compra = Model_Compras::getSingleton()
+            ->find($compra_id)
+            ->current();
+
+        $metodoPago = $this->_getInstanciaPago($compra);
+
+        $aprobado = $metodoPago->notify($compra);
+
+        if ($aprobado) {
+            $compra->setFromArray([
+                'aprobado' => 1
+            ])->save();
+
+            $db_licencias = new Model_InstitucionesLicencias();
+            $db_licencias->generarLicencias($compra);
+        }
+    }
+
+    public function pagarAction()
+    {
+        try {
+            $id = $this->getRequest()->getParam('id');
+
+            if ($id) {
+                /* @var $compra Model_Row_Compra */
+                $compra = Model_Compras::getSingleton()
+                    ->find($id)
+                    ->current();
+
+                if ($compra == null) {
+                    $this->getHelper('FlashMessenger')->addMessage('danger|' . __('La compra no existe'));
+
+                    $url = $this->view->url(array('action' => 'index', 'id' => null));
+                    $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+                    return;
+                }
+
+                if ($compra->getAprobado() == 1) {
+                    $this->getHelper('FlashMessenger')->addMessage('danger|' . __('La compra ya fue aprobada'));
+
+                    $url = $this->view->url(array('action' => 'index', 'id' => null));
+                    $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+                    return;
+                }
+            } else {
+                try {
+                    $compra = Model_Compras::getSingleton()->getCarrito();
+                } catch (Exception $ex) {
+                    $this->getHelper('FlashMessenger')->addMessage('danger|' . $ex->getMessage());
+                    $url = $this->view->url(array('action' => 'index', 'controller' => 'compras'));
+                    $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+                    return;
+                }
+            }
+
+            $metodoPago = $this->_getInstanciaPago($compra);
+            $view = $this->view;
+            $metodoPago->setUrlOk($view->serverUrl($view->url(array('action' => 'exito', 'compra_id' => $compra->getId()))));
+            $metodoPago->setUrlKo($view->serverUrl($view->url(array('action' => 'error', 'compra_id' => $compra->getId()))));
+            $metodoPago->setUrlNotificacion($view->serverUrl($view->url(['action' => 'notificacion', 'compra_id' => $compra->getId()])));
+            if ($metodoPago->isRedirect()) {
+                header('location:' . $metodoPago->getRedirect());
+                die();
+            } else {
+                die($metodoPago->getFormularioPago());
+            }
+        } catch (Exception $ex) {
+            $this->getHelper('FlashMessenger')->addMessage('danger|' . $ex->getMessage());
+
+            $url = $this->view->url(array('action' => 'index', 'id' => null));
+            $this->getHelper('redirector')->gotoUrlAndExit($this->view->serverUrl($url));
+            return;
+        }
+    }
+
+    private function _getInstanciaPago($compra)
+    {
+        // En la variable $clase vamos a tener el nombre del metodo de pago
+        // Ej: MetodoPago_MercadoPago
+        // Ej: MetodoPago_Paypal
+        $metodoPago = $compra->getMetodoPago();
+        
+        $clase = 'MetodoPago_' . $metodoPago;
+
+        if (!class_exists($clase))
+            throw new Exception(__('Metodo de pago %s incorrecto', $metodoPago));
+
+        /* @var $instancia Interface_IMetodoPagoFacade */
+        $instancia = new $clase($compra);
+        // Devolvemos la instancia
+        return $instancia;
+    }
+//
+//    public function usuarioAction() {
+//        require_once 'MercadoPago/mercadopago.php';
+//        $cfg = Zend_Registry::get('Zend_Config');
+//        $mp = new MP($cfg['mp']['client_id'], $cfg['mp']['client_secret']);
+//        if ($cfg['mp']['sandbox'])
+//            $mp->sandbox_mode(true);
+//
+//        try {
+//            $ut = $mp->post('/users/test_user', ['site_id' => 'MLA']);
+//            Bootstrap::logVar([
+//                'Email' => $ut['response']['email'],
+//                'password' => $ut['response']['password'],
+//            ]);
+//            $ut = $mp->post('/users/test_user', ['site_id' => 'MLA']);
+//            Bootstrap::logVar([
+//                'Email' => $ut['response']['email'],
+//                'password' => $ut['response']['password'],
+//            ]);
+//        } catch (Exception $ex) {
+//            var_dump($ex->getMessage());
+//        }
+//        die();
+//    }
 }

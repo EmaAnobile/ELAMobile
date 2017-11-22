@@ -1,4 +1,4 @@
-<a href="<?php echo $this->url(array('action' => 'carrito')) ?>" class="btn btn-primary">Carrito</a>
+<a href="<?php echo $this->url(array('action' => 'index', 'controller' => 'carrito')) ?>" class="btn btn-primary">Carrito</a>
 <table class="table">
     <tr>
         <?php if ($this->ocultar_institucion !== true) : ?>
@@ -23,6 +23,11 @@
                 <a href="<?php echo $this->url(array('action' => 'ver', 'id' => $item->getId())) ?>">
                     <?php echo __('Ver') ?>
                 </a>
+                <?php if ($item->getAprobado() == 0) : ?>
+                    <a href="<?php echo $this->url(array('action' => 'pagar', 'id' => $item->getId())) ?>" target="_blank">
+                        <?php echo __('Pagar') ?>
+                    </a>                
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

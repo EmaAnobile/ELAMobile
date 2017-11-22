@@ -66,4 +66,20 @@ Class Model_InstitucionesLicencias extends Model_Abstract {
         return $retorno;
     }
 
+    public function generarLicencias($compra) {
+        // Generar las licencias a la institucion
+        foreach ($compra->getDetalles() as $detalle) {
+            for ($i = 0; $i < $detalle->getCantidad(); $i++) {
+                $licencia = array(
+                    'institucion_id' => $compra->getInstitucionId(),
+                    'tipo_licencia_id' => $detalle->getTipoLicId(),
+                    'hash' => trim(com_create_guid(), '{}'),
+                    'compra_id' => $compra->getId()
+                );
+
+                $this->createRow($licencia)->save();
+            }
+        }
+    }
+
 }
