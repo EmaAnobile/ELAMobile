@@ -3,7 +3,7 @@
 /**
  * MercadoPago Integration Library
  * Access MercadoPago for payments integration
- * 
+ *
  * @author hcasatti
  *
  */
@@ -11,7 +11,7 @@ $GLOBALS["LIB_LOCATION"] = dirname(__FILE__);
 
 class MP {
 
-    const version = "0.5.2";
+    const version = "4.2.5";
 
     private $client_id;
     private $client_secret;
@@ -67,12 +67,110 @@ class MP {
         ));
 
         if ($access_data["status"] != 200) {
-            throw new MercadoPagoException($access_data['response']['message'], $access_data['status']);
+            //throw new MercadoPagoException ($access_data['response']['message'], $access_data['status']);
+            return null;
         }
 
         $this->access_data = $access_data['response'];
 
         return $this->access_data['access_token'];
+    }
+
+    /* APIs v1 */
+
+    /**
+     * Create a payment v1
+     * @param array $preference
+     * @return array(json)
+     */
+    public function search_paymentV1($id) {
+        $request = array(
+            "uri" => "/v1/payments/" . $id,
+            "params" => array(
+                "access_token" => $this->get_access_token()
+            )
+        );
+        $payment = MPRestClient::get($request);
+        return $payment;
+    }
+
+    public function get_or_create_customer($payer_email) {
+        $customer = $this->search_customer($payer_email);
+        if ($customer['status'] == 200 && $customer['response']['paging']['total'] > 0) {
+            $customer = $customer['response']['results'][0];
+        } else {
+            $resp = $this->create_customer($payer_email);
+            $customer = $resp['response'];
+        }
+        return $customer;
+    }
+
+    public function create_customer($email) {
+        $request = array(
+            "uri" => "/v1/customers",
+            "params" => array(
+                "access_token" => $this->get_access_token()
+            ),
+            "data" => array(
+                "email" => $email
+            )
+        );
+        $customer = MPRestClient::post($request);
+        return $customer;
+    }
+
+    public function search_customer($email) {
+        $request = array(
+            "uri" => "/v1/customers/search",
+            "params" => array(
+                "access_token" => $this->get_access_token(),
+                "email" => $email
+            )
+        );
+        $customer = MPRestClient::get($request);
+        return $customer;
+    }
+
+    public function create_card_in_customer($customer_id, $token, $payment_method_id = null, $issuer_id = null) {
+        $request = array(
+            "uri" => "/v1/customers/" . $customer_id . "/cards",
+            "params" => array(
+                "access_token" => $this->get_access_token()
+            ),
+            "data" => array(
+                "token" => $token,
+                "issuer_id" => $issuer_id,
+                "payment_method_id" => $payment_method_id
+            )
+        );
+        $card = MPRestClient::post($request);
+        return $card;
+    }
+
+    public function get_all_customer_cards($customer_id, $token) {
+        $request = array(
+            "uri" => "/v1/customers/" . $customer_id . "/cards",
+            "params" => array(
+                "access_token" => $this->get_access_token()
+            )
+        );
+        $cards = MPRestClient::get($request);
+        return $cards;
+    }
+
+    public function check_discount_campaigns($transaction_amount, $payer_email, $coupon_code) {
+        $request = array(
+            "uri" => "/discount_campaigns",
+            "params" => array(
+                "access_token" => $this->get_access_token(),
+                "transaction_amount" => $transaction_amount,
+                "payer_email" => $payer_email,
+                "coupon_code" => $coupon_code
+            )
+        );
+
+        $discount_info = MPRestClient::get($request);
+        return $discount_info;
     }
 
     /**
@@ -81,6 +179,10 @@ class MP {
      * @return array(json)
      */
     public function get_payment($id) {
+        if (!ctype_digit(strval($id))) {
+            throw new MercadoPagoException("Invalid argument. Payment ID must be integer");
+        }
+
         $uri_prefix = $this->sandbox ? "/sandbox" : "";
 
         $request = array(
@@ -210,6 +312,9 @@ class MP {
             "params" => array(
                 "access_token" => $this->get_access_token()
             ),
+            "headers" => array(
+                "user-agent" => "platform:desktop,type:wpecommerce,so:" . MP::version
+            ),
             "data" => $preference
         );
 
@@ -251,6 +356,26 @@ class MP {
 
         $preference_result = MPRestClient::get($request);
         return $preference_result;
+    }
+
+    /**
+     * Create a checkout preference
+     * @param array $preference
+     * @return array(json)
+     */
+    public function create_payment($preference) {
+        $request = array(
+            "uri" => "/v1/payments",
+            "params" => array(
+                "access_token" => $this->get_access_token()
+            ),
+            "headers" => array(
+                "X-Tracking-Id" => "platform:v1-whitelabel,type:wpecommerce,so:" . MP::version
+            ),
+            "data" => $preference
+        );
+        $payment = MPRestClient::post($request);
+        return $payment;
     }
 
     /**
@@ -407,6 +532,68 @@ class MP {
         return $result;
     }
 
+    //=== ACCOUNT SETTINGS FUNCTIONS ===
+
+    /**
+     * Summary: Check the status of a account regarding its option to use two cards for pay.
+     * Description: Check the status of a account regarding its option to use two cards for pay.
+     * @return array( json )
+     */
+    public function check_two_cards() {
+
+        $request = array(
+            'uri' => '/account/settings?access_token=' . $this->get_access_token()
+        );
+
+        $two_cards_info = MPRestClient::get($request);
+        if ($two_cards_info['status'] == 200)
+            return $two_cards_info['response']['two_cards'];
+        else {
+            return 'inactive';
+        }
+    }
+
+    /**
+     * Summary: Set paymennts with two cards for the merchant.
+     * Description: Set paymennts with two cards for the merchant.
+     * @param string $mode ( should be 'active' or 'inactive' string )
+     * @return array( json )
+     */
+    public function set_two_cards_mode($mode) {
+
+        $request = array(
+            'uri' => '/account/settings?access_token=' . $this->get_access_token(),
+            'data' => array(
+                'two_cards' => $mode
+            ),
+            'headers' => array(
+                'content-type' => 'application/json'
+            )
+        );
+
+        $two_cards_info = MPRestClient::put($request);
+        return $two_cards_info;
+    }
+
+    //=== MODULE ANALYTICS FUNCTIONS ===
+
+    /**
+     * Summary: Save the settings of the module for analytics purposes.
+     * Description: Save the settings of the module for analytics purposes.
+     * @param array( json )
+     * @return array( json )
+     */
+    public function analytics_save_settings($module_info) {
+
+        $request = array(
+            'uri' => '/modules/tracking/settings?access_token=' . $this->get_access_token(),
+            'data' => $module_info
+        );
+
+        $result = MPRestClient::post($request);
+        return $result;
+    }
+
     /*     * *************************************************************************************** */
 }
 
@@ -416,6 +603,86 @@ class MP {
 class MPRestClient {
 
     const API_BASE_URL = "https://api.mercadopago.com";
+    const API_BASE_ML_URL = "https://api.mercadolibre.com";
+
+    private static function build_request_ml($request) {
+        if (!extension_loaded("curl")) {
+            throw new MercadoPagoException("cURL extension not found. You need to enable cURL in your php.ini or another configuration you have.");
+        }
+
+        if (!isset($request["method"])) {
+            throw new MercadoPagoException("No HTTP METHOD specified");
+        }
+
+        if (!isset($request["uri"])) {
+            throw new MercadoPagoException("No URI specified");
+        }
+
+        // Set headers
+        $headers = array("accept: application/json");
+        $json_content = true;
+        $form_content = false;
+        $default_content_type = true;
+
+        if (isset($request["headers"]) && is_array($request["headers"])) {
+            foreach ($request["headers"] as $h => $v) {
+                $h = strtolower($h);
+                $v = strtolower($v);
+
+                if ($h == "content-type") {
+                    $default_content_type = false;
+                    $json_content = $v == "application/json";
+                    $form_content = $v == "application/x-www-form-urlencoded";
+                }
+
+                array_push($headers, $h . ": " . $v);
+            }
+        }
+        if ($default_content_type) {
+            array_push($headers, "content-type: application/json");
+        }
+
+        // Build $connect
+        $connect = curl_init();
+
+        curl_setopt($connect, CURLOPT_USERAGENT, "platform:v1-whitelabel,type:wpecommerce,so:" . MP::version);
+        curl_setopt($connect, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($connect, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($connect, CURLOPT_CAINFO, $GLOBALS["LIB_LOCATION"] . "/cacert.pem");
+        curl_setopt($connect, CURLOPT_CUSTOMREQUEST, $request["method"]);
+        curl_setopt($connect, CURLOPT_HTTPHEADER, $headers);
+
+        // Set parameters and url
+        if (isset($request["params"]) && is_array($request["params"]) && count($request["params"]) > 0) {
+            $request["uri"] .= (strpos($request["uri"], "?") === false) ? "?" : "&";
+            $request["uri"] .= self::build_query($request["params"]);
+        }
+        curl_setopt($connect, CURLOPT_URL, self::API_BASE_ML_URL . $request["uri"]);
+
+        // Set data
+        if (isset($request["data"])) {
+            if ($json_content) {
+                if (gettype($request["data"]) == "string") {
+                    json_decode($request["data"], true);
+                } else {
+                    $request["data"] = json_encode($request["data"]);
+                }
+
+                if (function_exists('json_last_error')) {
+                    $json_error = json_last_error();
+                    if ($json_error != JSON_ERROR_NONE) {
+                        throw new MercadoPagoException("JSON Error [{$json_error}] - Data: " . $request["data"]);
+                    }
+                }
+            } else if ($form_content) {
+                $request["data"] = self::build_query($request["data"]);
+            }
+
+            curl_setopt($connect, CURLOPT_POSTFIELDS, $request["data"]);
+        }
+
+        return $connect;
+    }
 
     private static function build_request($request) {
         if (!extension_loaded("curl")) {
@@ -457,7 +724,7 @@ class MPRestClient {
         // Build $connect
         $connect = curl_init();
 
-        curl_setopt($connect, CURLOPT_USERAGENT, "MercadoPago PHP SDK v" . MP::version);
+        curl_setopt($connect, CURLOPT_USERAGENT, "platform:v1-whitelabel,type:wpecommerce,so:" . MP::version);
         curl_setopt($connect, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($connect, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($connect, CURLOPT_CAINFO, $GLOBALS["LIB_LOCATION"] . "/cacert.pem");
@@ -496,6 +763,43 @@ class MPRestClient {
         return $connect;
     }
 
+    private static function exec_ml($request) {
+        // private static function exec($method, $uri, $data, $content_type) {
+
+        $connect = self::build_request_ml($request);
+
+        $api_result = curl_exec($connect);
+        $api_http_code = curl_getinfo($connect, CURLINFO_HTTP_CODE);
+
+        if ($api_result === FALSE) {
+            throw new MercadoPagoException(curl_error($connect));
+        }
+
+        $response = array(
+            "status" => $api_http_code,
+            "response" => json_decode($api_result, true)
+        );
+
+        /* if ($response['status'] >= 400) {
+          $message = $response['response']['message'];
+          if (isset ($response['response']['cause'])) {
+          if (isset ($response['response']['cause']['code']) && isset ($response['response']['cause']['description'])) {
+          $message .= " - ".$response['response']['cause']['code'].': '.$response['response']['cause']['description'];
+          } else if (is_array ($response['response']['cause'])) {
+          foreach ($response['response']['cause'] as $cause) {
+          $message .= " - ".$cause['code'].': '.$cause['description'];
+          }
+          }
+          }
+
+          throw new MercadoPagoException ($message, $response['status']);
+          } */
+
+        curl_close($connect);
+
+        return $response;
+    }
+
     private static function exec($request) {
         // private static function exec($method, $uri, $data, $content_type) {
 
@@ -513,26 +817,20 @@ class MPRestClient {
             "response" => json_decode($api_result, true)
         );
 
-        if ($response['status'] >= 400) {
-            $message = $response['response']['message'];
-            if (isset($response['response']['cause'])) {
-                if (isset($response['response']['cause']['code']) && isset($response['response']['cause']['description'])) {
-                    $message .= " - " . $response['response']['cause']['code'] . ': ' . $response['response']['cause']['description'];
-                } else if (is_array($response['response']['cause'])) {
-                    foreach ($response['cause'] as $causes) {
-                        if (is_array($causes)) {
-                            foreach ($causes as $cause) {
-                                $message .= " - " . $cause['code'] . ': ' . $cause['description'];
-                            }
-                        } else {
-                            $message .= " - " . $causes['code'] . ': ' . $causes['description'];
-                        }
-                    }
-                }
-            }
+        /* if ($response['status'] >= 400) {
+          $message = $response['response']['message'];
+          if (isset ($response['response']['cause'])) {
+          if (isset ($response['response']['cause']['code']) && isset ($response['response']['cause']['description'])) {
+          $message .= " - ".$response['response']['cause']['code'].': '.$response['response']['cause']['description'];
+          } else if (is_array ($response['response']['cause'])) {
+          foreach ($response['response']['cause'] as $cause) {
+          $message .= " - ".$cause['code'].': '.$cause['description'];
+          }
+          }
+          }
 
-            throw new MercadoPagoException($message, $response['status']);
-        }
+          throw new MercadoPagoException ($message, $response['status']);
+          } */
 
         curl_close($connect);
 
@@ -549,6 +847,12 @@ class MPRestClient {
 
             return implode("&", $elements);
         }
+    }
+
+    public static function get_ml($request) {
+        $request["method"] = "GET";
+
+        return self::exec_ml($request);
     }
 
     public static function get($request) {
