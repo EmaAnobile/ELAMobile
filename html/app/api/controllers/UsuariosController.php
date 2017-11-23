@@ -1,15 +1,18 @@
 <?php
 
-class Api_UsuariosController extends Zend_Controller_Action {
+class Api_UsuariosController extends Zend_Controller_Action
+{
 
-    public function init() {
+    public function init()
+    {
         Zend_Layout::getMvcInstance()->disableLayout();
         Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')->setNoRender(true);
         $this->getResponse()
-                ->setHeader('Content-Type', 'application/json');
+            ->setHeader('Content-Type', 'application/json');
     }
 
-    public function accederAction() {
+    public function accederAction()
+    {
         $auth = Zend_Auth::getInstance();
 
         // Colocamos nombre para almacenar la instancia de Sesion.        
@@ -19,8 +22,8 @@ class Api_UsuariosController extends Zend_Controller_Action {
         //parametros por defecto, al default y con el true que reestablezca.
         if ($auth->hasIdentity()) {
             $this->getResponse()->setBody(Zend_Json::encode(array(
-                        'info' => __('Ya se encuentra autenticado'),
-                        'status' => Bootstrap::INFO_AUTENTICADO
+                    'info' => __('Ya se encuentra autenticado'),
+                    'status' => Bootstrap::INFO_AUTENTICADO
             )));
             return;
         }
@@ -59,8 +62,8 @@ class Api_UsuariosController extends Zend_Controller_Action {
                             $auth->clearIdentity();
 
                             $this->getResponse()->setBody(Zend_Json::encode(array(
-                                        'error' => __('Su licencia caduco. Comuniquese con su institucion.'),
-                                        'status' => Bootstrap::ERROR_LICENCIA_CADUCADA
+                                    'error' => __('Su licencia caduco. Comuniquese con su institucion.'),
+                                    'status' => Bootstrap::ERROR_LICENCIA_CADUCADA
                             )));
                             return;
                         }
@@ -72,8 +75,8 @@ class Api_UsuariosController extends Zend_Controller_Action {
                     $session->usuario = $adapter->getResultRowObject();
 
                     $this->getResponse()->setBody(Zend_Json::encode(array(
-                                'info' => __('Ingreso exitoso'),
-                                'status' => Bootstrap::INFO_AUTENTICADO
+                            'info' => __('Ingreso exitoso'),
+                            'status' => Bootstrap::INFO_AUTENTICADO
                     )));
                     return;
                     break;
@@ -81,7 +84,8 @@ class Api_UsuariosController extends Zend_Controller_Action {
         }
     }
 
-    public function recuperarAction() {
+    public function recuperarAction()
+    {
         if ($this->getRequest()->isPost()) {
             $db = new Model_Usuarios();
             $usuario = $this->getRequest()->getPost('usuario');
@@ -93,28 +97,27 @@ class Api_UsuariosController extends Zend_Controller_Action {
             $hash = $usu->getHashValidacion();
 
             $url = $this->view->serverUrl($this->view->url(array(
-                        'hash' => $hash,
-                        'module' => 'front',
-                        'action' => 'confirmar'
+                    'hash' => $hash,
+                    'module' => 'front',
+                    'action' => 'confirmar'
             )));
             $mail = new Zend_Mail();
             $mail->addTo($usu->getEmail())
-                    ->setBodyHtml(<<<EMAIL
+                ->setBodyHtml(<<<EMAIL
                         Para restaurar su clave haga clic 
                             <a href="{$url}">aqui</a>
 EMAIL
-                    )
-                    ->send();
+                )
+                ->send();
             $this->getResponse()->setBody(Zend_Json::encode(array(
-                        'info' => __('Se enviaron las instrucciones por email'),
-                        'status' => Bootstrap::INFO_EMAIL_ENVIADO
+                    'info' => __('Se enviaron las instrucciones por email'),
+                    'status' => Bootstrap::INFO_EMAIL_ENVIADO
             )));
             return;
         }
         $this->getResponse()->setBody(Zend_Json::encode(array(
-                    'error' => __('Error no capturado'),
-                    'status' => Bootstrap::ERROR_NO_CAPTURADO
+                'error' => __('Error no capturado'),
+                'status' => Bootstrap::ERROR_NO_CAPTURADO
         )));
     }
-
 }

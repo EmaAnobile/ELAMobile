@@ -3,7 +3,6 @@ RewriteEngine On
 #Definimos un nombre para el entorno de la aplicación, si se encuentra definido
 #desde el servidor toma dicho valor de otra manera adopta el valor "ELAMobile".
 SetEnvIf APPLICATION_ENV ^$ APPLICATION_ENV ELAMobile
-SetEnv APPLICATION_ENV ELAMobile
 
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
