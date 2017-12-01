@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -27,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.manuelcanepa.elamobile.elamobile.helpers.UsuariosService;
 
 import java.util.ArrayList;
@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask.execute(this);
         }
     }
 
@@ -290,6 +290,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private LoginActivity instancia;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -301,9 +302,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             UsuariosService servicio = new UsuariosService();
 
             try {
-                AsyncHttpResponseHandler token = servicio.ValidarCredenciales(mEmail, mPassword);
+                if (servicio.ValidarCredenciales(mEmail, mPassword))
+                    return true;
 
-                return true;
             } catch (Exception e) {
 
             }
@@ -316,8 +317,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                Intent intent = new Intent(this.instancia, MainActivity.class);
+                startActivity(intent);
                 finish();
             } else {
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -328,6 +332,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+
+        public void execute(LoginActivity loginActivity) {
+            this.instancia = loginActivity;
+            super.execute();
+        }
     }
+
 }
 

@@ -2,7 +2,7 @@
 
 umask(0);
 
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 define('DS', DIRECTORY_SEPARATOR);
 

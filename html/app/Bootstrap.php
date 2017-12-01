@@ -9,16 +9,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     static protected $_writer = null;
 
     const MAX_LOG_SIZE = 1310720;
-    // 
-    // Constantes de error
-    //
-    const ERROR_LICENCIA_CADUCADA = 1;
-    const ERROR_NO_CAPTURADO = 2;
-    // 
-    // Constantes de informacion
-    //
-    const INFO_AUTENTICADO = 1;
-    const INFO_EMAIL_ENVIADO = 2;
+
 
     protected function _initAutoload() {
         $autoloader = new Zend_Application_Module_Autoloader(array(

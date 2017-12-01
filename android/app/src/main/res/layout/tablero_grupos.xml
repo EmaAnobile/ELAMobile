@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <GridLayout
+            android:id="@+id/grupo_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:background="#ff69b4"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/letra_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="A" />
+
+            <TextView
+                android:id="@+id/letra_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="B" />
+
+            <TextView
+                android:id="@+id/letra_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="C" />
+
+            <TextView
+                android:id="@+id/letra_d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="D" />
+
+            <TextView
+                android:id="@+id/letra_e"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="E" />
+
+            <TextView
+                android:id="@+id/letra_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="F" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/grupo_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:background="#ff0000"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/letra_g"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="G" />
+
+            <TextView
+                android:id="@+id/letra_h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="H" />
+
+            <TextView
+                android:id="@+id/letra_i"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="I" />
+
+            <TextView
+                android:id="@+id/letra_j"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="J" />
+
+            <TextView
+                android:id="@+id/letra_k"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="K" />
+
+            <TextView
+                android:id="@+id/letra_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="L" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/grupo_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:background="#008800"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/letra_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="M" />
+
+            <TextView
+                android:id="@+id/letra_n"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="N" />
+
+            <TextView
+                android:id="@+id/letra_o"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="O" />
+
+            <TextView
+                android:id="@+id/letra_p"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="P" />
+
+            <TextView
+                android:id="@+id/letra_q"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Q" />
+
+            <TextView
+                android:id="@+id/letra_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="R" />
+        </GridLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="2">
+
+        <GridLayout
+            android:id="@+id/grupo_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:background="#ffff00"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/letra_s"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="S" />
+
+            <TextView
+                android:id="@+id/letra_t"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="T" />
+
+            <TextView
+                android:id="@+id/letra_u"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="U" />
+
+            <TextView
+                android:id="@+id/letra_v"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="V" />
+
+            <TextView
+                android:id="@+id/letra_w"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="W" />
+
+            <TextView
+                android:id="@+id/letra_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="X" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/grupo_5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:background="#ffa500"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/letra_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Y" />
+
+            <TextView
+                android:id="@+id/letra_z"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Z" />
+
+            <TextView
+                android:id="@+id/letra_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="1" />
+
+            <TextView
+                android:id="@+id/letra_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="2" />
+
+            <TextView
+                android:id="@+id/letra_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="3" />
+
+            <TextView
+                android:id="@+id/letra_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="4" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/grupo_6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:background="#add8e6"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/letra_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="5" />
+
+            <TextView
+                android:id="@+id/letra_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="6" />
+
+            <TextView
+                android:id="@+id/letra_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="7" />
+
+            <TextView
+                android:id="@+id/letra_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="8" />
+
+            <TextView
+                android:id="@+id/letra_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="9" />
+
+            <TextView
+                android:id="@+id/letra_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="0" />
+        </GridLayout>
+    </LinearLayout>
+</LinearLayout>

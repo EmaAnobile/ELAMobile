@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 import cz.msebera.android.httpclient.Header;
 
 public class HttpUtils {
-    private static final String BASE_URL = "http://emaela.manuelcanepa.com.ar/api";
-    // private static final String BASE_URL = "http://192.168.1.85/api";
+    //private static final String BASE_URL = "http://emaela.manuelcanepa.com.ar/api";
+    private static final String BASE_URL = "http://192.168.1.85/api";
 
     public static String cookieRequest = "";
 

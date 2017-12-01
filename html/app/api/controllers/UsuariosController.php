@@ -23,7 +23,7 @@ class Api_UsuariosController extends Zend_Controller_Action
         if ($auth->hasIdentity()) {
             $this->getResponse()->setBody(Zend_Json::encode(array(
                     'info' => __('Ya se encuentra autenticado'),
-                    'status' => Bootstrap::INFO_AUTENTICADO
+                    'status' => 1
             )));
             return;
         }
@@ -39,12 +39,14 @@ class Api_UsuariosController extends Zend_Controller_Action
             $adapter = new Zend_Auth_Adapter_DbTable($db, (string) $dbUsuario, 'usuario', 'password', '?');
             $adapter->setIdentity($usuario)->setCredential($password);
             $result = $auth->authenticate($adapter);
-            $error = '';
             switch ($result->getCode()) {
                 case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND:
                 case Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID:
-                    $error = 'Usuario o password incorrecto';
-
+                    $this->getResponse()->setBody(Zend_Json::encode(array(
+                            'info' => __('Usuario o password incorrecto'),
+                            'status' => 0
+                    )));
+                    return;
                     break;
 
                 case Zend_Auth_Result::SUCCESS:
@@ -62,8 +64,8 @@ class Api_UsuariosController extends Zend_Controller_Action
                             $auth->clearIdentity();
 
                             $this->getResponse()->setBody(Zend_Json::encode(array(
-                                    'error' => __('Su licencia caduco. Comuniquese con su institucion.'),
-                                    'status' => Bootstrap::ERROR_LICENCIA_CADUCADA
+                                    'info' => __('Su licencia caduco. Comuniquese con su institucion.'),
+                                    'status' => 0
                             )));
                             return;
                         }
@@ -76,7 +78,7 @@ class Api_UsuariosController extends Zend_Controller_Action
 
                     $this->getResponse()->setBody(Zend_Json::encode(array(
                             'info' => __('Ingreso exitoso'),
-                            'status' => Bootstrap::INFO_AUTENTICADO
+                            'status' => 1
                     )));
                     return;
                     break;
