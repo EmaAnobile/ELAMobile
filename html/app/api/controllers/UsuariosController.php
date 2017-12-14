@@ -11,6 +11,34 @@ class Api_UsuariosController extends Zend_Controller_Action
             ->setHeader('Content-Type', 'application/json');
     }
 
+    public function infoAction()
+    {
+        $auth = Zend_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_Session('backend'));
+        $tieneIdentidad = 0;
+
+        if ($auth->hasIdentity()) {
+            $session = new Zend_Session_Namespace('backend');
+            $usuario = $session->usuario;
+            if ($usuario != null) {
+                $usuario = Model_Usuarios::getSingleton()->find($usuario->id)->current();
+                $tieneIdentidad = 1;
+                if ($usuario->getNombreRol() == 'Paciente') {
+                    $ahora = new Zend_Date();
+                    $vigencia = new Zend_Date($usuario->getFechaVigencia());
+                    if ($ahora->compare($vigencia) >= 0) {
+//                        $auth->clearIdentity();
+                        $tieneIdentidad = 0;
+                    }
+                }
+            }
+        }
+
+        $this->getResponse()->setBody(Zend_Json::encode(array(
+                'status' => (string) $tieneIdentidad
+        )));
+    }
+
     public function accederAction()
     {
         $auth = Zend_Auth::getInstance();
