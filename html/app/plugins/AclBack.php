@@ -29,6 +29,7 @@ class Plugin_AclBack extends Zend_Controller_Plugin_Abstract {
         // Todos los controllers del modulo back requieren de un usuario logueado
         $protegido = ($ctrl != 'error') ? true : false;
         $protegido = ($ctrl == 'compras' && $act == 'notificacion') ? false : $protegido;
+        $protegido = ($ctrl == 'usuarios' && $act == 'recuperar') ? false : $protegido;
         $protegido = ($mod == 'api') ? false : $protegido;
         if ($auth->hasIdentity() == false && $protegido) {
             $this->getRequest()
