@@ -1,10 +1,12 @@
 package com.manuelcanepa.elamobile.elamobile.helpers;
 
+import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
 
@@ -21,6 +23,11 @@ public class HttpUtils {
 
     public static AsyncHttpClient syncHttpClient = new SyncHttpClient();
     public static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+
+    public void SetCookieStorage(PersistentCookieStore myCookieStore){
+        syncHttpClient.setCookieStore(myCookieStore);
+        asyncHttpClient.setCookieStore(myCookieStore);
+    }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         responseHandler = HttpUtils.parseResponseHandler(responseHandler);

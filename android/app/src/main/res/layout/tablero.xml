@@ -1,16 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.manuelcanepa.elamobile.elamobile.MainActivity"
+    tools:showIn="@layout/app_bar_main">
 
-    <include
-        layout="@layout/tablero_grupos"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <include
-        layout="@layout/tablero_letras"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/texto_voz"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:minHeight="30dp" />
+
+            <Button
+                android:onClick="reproducirTexto"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/icono_microfono" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/tablero_grupos"
+            android:id="@+id/tablero_bloque_grupos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/tablero_letras"
+            android:id="@+id/tablero_bloque_letras"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/boton_espacio"
+                android:onClick="clickEnEspacio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/espacio" />
+
+            <Button
+                android:id="@+id/boton_borrar"
+                android:onClick="clickEnBorrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/borrar" />
+
+            <Button
+                android:id="@+id/boton_borrar_todo"
+                android:onClick="clickEnBorrarTodo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/borrar_todo" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

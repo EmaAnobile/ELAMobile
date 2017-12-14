@@ -10,33 +10,36 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/letra_a"
+            android:id="@+id/letra_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ff69b4"
             android:padding="15dp"
             android:text="1"
+            android:onClick="clickEnLetra"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/letra_b"
+            android:id="@+id/letra_2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ff0000"
             android:padding="15dp"
             android:text="2"
+            android:onClick="clickEnLetra"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/letra_c"
+            android:id="@+id/letra_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ffff00"
             android:padding="15dp"
             android:text="3"
+            android:onClick="clickEnLetra"
             android:textAlignment="center" />
 
     </LinearLayout>
@@ -47,33 +50,36 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/letra_d"
+            android:id="@+id/letra_4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ffa500"
             android:padding="15dp"
             android:text="4"
+            android:onClick="clickEnLetra"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/letra_e"
+            android:id="@+id/letra_5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#add8e6"
             android:padding="15dp"
             android:text="5"
+            android:onClick="clickEnLetra"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/letra_f"
+            android:id="@+id/letra_6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ff69b4"
             android:padding="15dp"
             android:text="6"
+            android:onClick="clickEnLetra"
             android:textAlignment="center" />
     </LinearLayout>
 </LinearLayout>

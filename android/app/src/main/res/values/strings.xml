@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">Acceder</string>
+    <string name="title_activity_login">ELAMobile</string>
 
     <!-- Strings related to login -->
     <string name="prompt_user">User</string>
@@ -20,4 +20,7 @@
         completions."
     </string>
     <string name="error_empty_password">Must enter a password</string>
+    <string name="espacio">Espacio</string>
+    <string name="borrar_todo">Borrar todo</string>
+    <string name="borrar">Borrar</string>
 </resources>

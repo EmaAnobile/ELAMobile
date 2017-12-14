@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ff69b4"
+            android:onClick="clickEnGrupo"
             android:columnCount="3">
 
             <TextView
@@ -66,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ff0000"
+            android:onClick="clickEnGrupo"
             android:columnCount="3">
 
             <TextView
@@ -117,6 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#008800"
+            android:onClick="clickEnGrupo"
             android:columnCount="3">
 
             <TextView
@@ -176,6 +179,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ffff00"
+            android:onClick="clickEnGrupo"
             android:columnCount="3">
 
             <TextView
@@ -227,6 +231,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#ffa500"
+            android:onClick="clickEnGrupo"
             android:columnCount="3">
 
             <TextView
@@ -278,6 +283,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:background="#add8e6"
+            android:onClick="clickEnGrupo"
             android:columnCount="3">
 
             <TextView

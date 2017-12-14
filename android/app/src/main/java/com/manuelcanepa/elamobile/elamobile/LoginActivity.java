@@ -7,15 +7,12 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -28,12 +25,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loopj.android.http.PersistentCookieStore;
 import com.manuelcanepa.elamobile.elamobile.helpers.UsuariosService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -50,6 +46,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private UserLoggedInTask mLoggedInTask = null;
+
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -62,11 +63,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.setText("paciente");
-        populateAutoComplete();
+        //mEmailView.setText("paciente");
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setText("paciente");
+        //mPasswordView.setText("paciente");
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -88,51 +88,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        validateLoggedIn();
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
+    private void validateLoggedIn() {
+        if (mLoggedInTask != null) {
             return;
         }
 
-        getLoaderManager().initLoader(0, null, this);
+        showProgress(true);
+        mLoggedInTask = new UserLoggedInTask();
+        mLoggedInTask.execute(this);
     }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -247,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
+        List<String> emails = new ArrayList<String>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
@@ -265,7 +233,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
+                new ArrayAdapter<String>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -300,6 +268,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             UsuariosService servicio = new UsuariosService();
+            PersistentCookieStore myCookieStore = new PersistentCookieStore(instancia);
+            servicio.SetCookieStorage(myCookieStore);
 
             try {
                 if (servicio.ValidarCredenciales(mEmail, mPassword))
@@ -338,6 +308,55 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             super.execute();
         }
     }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserLoggedInTask extends AsyncTask<Void, Void, Boolean> {
+
+        private LoginActivity instancia;
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            UsuariosService servicio = new UsuariosService();
+            PersistentCookieStore myCookieStore = new PersistentCookieStore(instancia);
+            servicio.SetCookieStorage(myCookieStore);
+
+            try {
+                if (servicio.ValidarSesion())
+                    return true;
+
+            } catch (Exception e) {
+
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mLoggedInTask = null;
+            showProgress(false);
+
+            if (success) {
+                Intent intent = new Intent(this.instancia, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mLoggedInTask = null;
+            showProgress(false);
+        }
+
+        public void execute(LoginActivity loginActivity) {
+            this.instancia = loginActivity;
+            super.execute();
+        }
+    }
+
 
 }
 
